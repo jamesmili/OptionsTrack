@@ -17,7 +17,7 @@ class Option extends React.Component{
             calls: [],
             expiration: [],
             expirationDateEpoch: null,
-            expirationDate: "hello"
+            expirationDate: ""
         }
         this.updateData = this.updateData.bind(this)
     }
@@ -54,8 +54,8 @@ class Option extends React.Component{
 
     render(){
         const handleChange = (event) => {
-            this.updateData(epoch)
             const epoch = event.target.value
+            this.updateData(epoch)
             this.setState({
                 expirationDate: convertDate(epoch),
                 expirationDateEpoch: epoch
@@ -72,7 +72,7 @@ class Option extends React.Component{
                 <h5>{this.state.quote.symbol}</h5>
                 <p>{this.state.quote.longName}</p>
                 <p>{this.state.quote.quoteSourceName}</p>
-                <h3>{this.state.quote.postMarketPrice}  {this.state.quote.currency}</h3>
+                <h3>{this.state.quote.regularMarketPrice}  {this.state.quote.currency}</h3>
                 <FormControl variant="outlined">
                     <Select value={this.state.expirationDate} onChange={handleChange}>
                         {
@@ -85,7 +85,7 @@ class Option extends React.Component{
                         }
                     </Select>
                 </FormControl>
-                <OptionChain calls={this.state.calls} puts={this.state.puts}/>
+                <OptionChain calls={this.state.calls} puts={this.state.puts} />
             </div>
         )
     }

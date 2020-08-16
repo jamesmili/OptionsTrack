@@ -1,0 +1,28 @@
+.positive{
+  background-color: #84FFA0;
+  text-align: center;
+}
+.negative{
+  background-color: #FFA296;
+  text-align: center;
+}
+.itm{
+  background-color: #84FFA0;
+  height: 50px;
+  width:5px;
+  margin-right: 5px;
+  float: left;
+}
+.otm{
+  background-color: #FFA296;
+  height: 50px;
+  width:5px;
+  margin-right: 5px;
+  float: left;
+}
+.strike{
+  float: right;
+}
+.wrapper{
+  margin: 0 auto
+}

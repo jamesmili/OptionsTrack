@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+html{
+  font-family: 'Lato';
+}
+.positive{
+  background-color: #84FFA0;
+  text-align: center;
+}
+.negative{
+  background-color: #FFA296;
+  text-align: center;
+}
+.itm{
+  background-color: #84FFA0;
+  height: 50px;
+  width:5px;
+  margin-right: 5px;
+  float: left;
+}
+.otm{
+  background-color: #FFA296;
+  height: 50px;
+  width:5px;
+  margin-right: 5px;
+  float: left;
+}
+.strike{
+  float: right;
+}
+.wrapper{
+  margin: 0 auto
+}
+#expr{
+  float: right;
+  margin-right: 20px;
+}
+#callsputs{
+  margin-top: 20px;
+  float: left;
+}
+
+#body{
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+#calls{
+  background-color:#84FFA0;
+}
+
+#puts{
+  background-color: #FFA296;
+}
+
+#divider{
+  margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 353px){
+  #expr{
+    float: none;
+  }
+  #callsputs{
+    float: none;
+  }
+  #body{
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
+}

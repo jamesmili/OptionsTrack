@@ -1,5 +1,6 @@
 import React from "react"
-import Quotes from "../components/Option"
+import Option from "../components/Option"
+import '../styles/styles.css';
 
 class Main extends React.Component{
 
@@ -8,7 +9,7 @@ class Main extends React.Component{
             <div>
                 <h1>Options Track</h1>
                 <input></input>
-                <Quotes/>
+                <Option/>
             </div>
         )
     }

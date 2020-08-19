@@ -10,6 +10,12 @@ html{
   background-color: #FFA296;
   text-align: center;
 }
+.gain{
+  color: #00CB00;
+}
+.loss{
+  color: #EA1B00;
+}
 .itm{
   background-color: #84FFA0;
   height: 50px;
@@ -55,7 +61,22 @@ html{
 #divider{
   margin-bottom: 10px;
 }
-
+#price{
+  font-size: 40px;
+  font-weight: bold;
+  margin-top: 0px;
+}
+.ticker{
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 0px;
+}
+#exchange{
+  font-size: 11px;
+}
+#currency{
+  font-size: 11px;
+}
 @media only screen and (max-width: 353px){
   #expr{
     float: none;

@@ -5,10 +5,11 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import { ToggleButton } from '@material-ui/lab';
 import Divider from '@material-ui/core/Divider';
-import OptionChain from './OptionChain'
+import Grid from '@material-ui/core/Grid';
+import OptionChain from '../components/OptionChain'
 
 const proxyURL = "https://cors-anywhere.herokuapp.com/";
-const endpointURL = "https://query1.finance.yahoo.com/v7/finance/options/AAPL"
+const endpointURL = `https://query1.finance.yahoo.com/v7/finance/options/`
 class Option extends React.Component{
     constructor(props){
         super(props)
@@ -21,12 +22,14 @@ class Option extends React.Component{
             expiration: [],
             expirationDateEpoch: null,
             expirationDate: "",
-            flag: true
+            flag: true,
+            ticker: 'TSLA'
         }
         this.updateData = this.updateData.bind(this)
     }
     componentDidMount(){
-        axios.get(proxyURL + endpointURL, {
+        this.setState({ticker: this.props.ticker})
+        axios.get(proxyURL + endpointURL + this.state.ticker, {
             headers: {"Content-Type": 'application/json'}
         }).then(response => {
             this.setState({
@@ -36,12 +39,12 @@ class Option extends React.Component{
                 expiration: response.data.optionChain.result[0].expirationDates,
                 expirationDateEpoch: response.data.optionChain.result[0].options.expirationDate,
             })
-        }).catch(error=>{
-            console.log("error")
+        }).catch(error =>{
+            console.log(error)
         })
     }
     updateData(epoch){
-        axios.get(proxyURL + endpointURL + "?date=" + epoch, {
+        axios.get(proxyURL + endpointURL + this.state.ticker + "?date=" + epoch, {
             headers: {"Content-Type": 'application/json'}
         }).then(response => {
             this.setState({
@@ -51,8 +54,8 @@ class Option extends React.Component{
                 expiration: response.data.optionChain.result[0].expirationDates,
                 expirationDateEpoch: response.data.optionChain.result[0].options.expirationDate
             })
-        }).catch(error=>{
-            console.log("error")
+        }).catch(error =>{
+            console.log(error)
         })
     }
 
@@ -70,23 +73,81 @@ class Option extends React.Component{
             const expr = month[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getFullYear()
             return expr
         }
+        const regMarketPriceChange = () => {
+            if (this.state.quote.regularMarketChange > 0){
+                return(
+                    <p className="gain">+{Number(this.state.quote.regularMarketChange).toFixed(2)}</p>
+                )
+            }else if (this.state.quote.regularMarketChange < 0){
+                return(
+                    <p className="loss">-{Number(this.state.quote.regularMarketChange).toFixed(2)}</p>
+                )                
+            }else{
+                return(
+                    <p>{Number(this.state.quote.regularMarketChange).toFixed(2)}</p>
+                )
+            }
+        }
+
+        const regMarketPriceChangePer = () => {
+            if (this.state.quote.regularMarketChangePercent > 0){
+                return(
+                    <p className="gain">(+{Number(this.state.quote.regularMarketChangePercent).toFixed(2)}%)</p>
+                )
+            }else if (this.state.quote.regularMarketChangePercent < 0){
+                return(
+                    <p className="loss">(-{Number(this.state.quote.regularMarketChangePercent).toFixed(2)}%)</p>
+                )
+            }else{
+                return(
+                    <p>({Number(this.state.quote.regularMarketChangePercent).toFixed(2)}%)</p>
+                )
+            }
+        }
         const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
         return(
             <div id="body">
                 <div>
-                    <h5>{this.state.quote.symbol}</h5>
-                    <p>{this.state.quote.longName}</p>
-                    <p>{this.state.quote.quoteSourceName}</p>
-                    <div>
-                        <p>{Number(this.state.quote.regularMarketPrice).toFixed(2)}</p>
-                        <p>{this.state.quote.currency}</p>
-                    </div>
+                    <Grid container>
+                        <Grid container spacing={1}>
+                            <Grid item>
+                                <p className="ticker">{this.state.quote.longName}</p>
+                            </Grid>
+                            <Grid item>
+                                <p className="ticker">({this.state.quote.symbol})</p>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            <Grid item>
+                                <p id="exchange">{this.state.quote.quoteSourceName}.</p>
+                            </Grid>
+                            <Grid item>
+                                <p id="currency">Currency in {this.state.quote.currency}.</p>
+                            </Grid>                  
+                        </Grid>
+      
+                    </Grid>
+                    <Grid container 
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                        spacing={1}>
+                        <Grid item>
+                            <p id="price">{Number(this.state.quote.regularMarketPrice).toFixed(2)}</p>
+                        </Grid>
+                        <Grid item>
+                            {regMarketPriceChange()}
+                        </Grid>
+                        <Grid item>
+                            {regMarketPriceChangePer()}
+                        </Grid>
+                    </Grid>
                 </div>
                 <div>
                     <Divider id="divider"/>
                     <FormControl variant="outlined" id="expr">
                         <FormHelperText>Expiration</FormHelperText>
-                        <Select native disableUnderline onChange={handleChange}>
+                        <Select native onChange={handleChange}>
                             {
                                 this.state.expiration.map(expirationDate => {
                                     const expr = convertDate(expirationDate)

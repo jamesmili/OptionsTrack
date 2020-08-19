@@ -82,7 +82,7 @@ class OptionChain extends React.Component{
                 )
             }else{
                 return(
-                    <TableCell>0</TableCell>
+                    <TableCell>-</TableCell>
                 )
             }
         }
@@ -98,7 +98,7 @@ class OptionChain extends React.Component{
                 )
             }else{
                 return(
-                    <TableCell>0</TableCell>
+                    <TableCell>-</TableCell>
                 )
             }
         }

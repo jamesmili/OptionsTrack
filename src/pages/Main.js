@@ -1,14 +1,15 @@
 import React from "react"
 import { Link } from "gatsby"
 import '../styles/styles.css';
+import Header from '../components/Header'
 
 class Main extends React.Component{
 
     render(){
-        const ticker = "APPL"
+        const ticker = "AAPL"
         return (
             <div>
-                <h1>Options Track</h1>
+                <Header/>
                 <Link to={`/options/${ticker}`}>
                     <span>
                         {ticker}

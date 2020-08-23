@@ -6,10 +6,11 @@ import FormControl from '@material-ui/core/FormControl';
 import { ToggleButton } from '@material-ui/lab';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
+import Header from '../components/Header'
 import OptionChain from '../components/OptionChain'
 
 const proxyURL = "https://cors-anywhere.herokuapp.com/";
-const endpointURL = `https://query1.finance.yahoo.com/v7/finance/options/`
+const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
 class Option extends React.Component{
     constructor(props){
         super(props)
@@ -23,14 +24,35 @@ class Option extends React.Component{
             expirationDateEpoch: null,
             expirationDate: "",
             flag: true,
-            ticker: 'TSLA'
         }
         this.updateData = this.updateData.bind(this)
     }
     componentDidMount(){
-        this.setState({ticker: this.props.ticker})
-        axios.get(proxyURL + endpointURL + this.state.ticker, {
-            headers: {"Content-Type": 'application/json'}
+        axios.get(proxyURL + endpointURL + this.props.ticker, {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            this.setState({
+                quote: response.data.optionChain.result[0].quote,
+                calls: response.data.optionChain.result[0].options[0].calls,
+                puts: response.data.optionChain.result[0].options[0].puts,
+                expiration: response.data.optionChain.result[0].expirationDates,
+                expirationDateEpoch: response.data.optionChain.result[0].options.expirationDate,
+            })
+        }).catch(error =>{
+            console.log(error)
+        })
+    }
+    componentDidUpdate(){
+        axios.get(proxyURL + endpointURL + this.props.ticker, {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
+                'Content-Type': 'application/json'
+            }
         }).then(response => {
             this.setState({
                 quote: response.data.optionChain.result[0].quote,
@@ -44,8 +66,12 @@ class Option extends React.Component{
         })
     }
     updateData(epoch){
-        axios.get(proxyURL + endpointURL + this.state.ticker + "?date=" + epoch, {
-            headers: {"Content-Type": 'application/json'}
+        axios.get(proxyURL + endpointURL + this.props.ticker + "?date=" + epoch, {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
+                'Content-Type': 'application/json'
+            }
         }).then(response => {
             this.setState({
                 quote: response.data.optionChain.result[0].quote,
@@ -80,7 +106,7 @@ class Option extends React.Component{
                 )
             }else if (this.state.quote.regularMarketChange < 0){
                 return(
-                    <p className="loss">-{Number(this.state.quote.regularMarketChange).toFixed(2)}</p>
+                    <p className="loss">{Number(this.state.quote.regularMarketChange).toFixed(2)}</p>
                 )                
             }else{
                 return(
@@ -96,7 +122,7 @@ class Option extends React.Component{
                 )
             }else if (this.state.quote.regularMarketChangePercent < 0){
                 return(
-                    <p className="loss">(-{Number(this.state.quote.regularMarketChangePercent).toFixed(2)}%)</p>
+                    <p className="loss">({Number(this.state.quote.regularMarketChangePercent).toFixed(2)}%)</p>
                 )
             }else{
                 return(
@@ -106,79 +132,81 @@ class Option extends React.Component{
         }
         const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
         return(
-            <div id="body">
-                <div>
-                    <Grid container>
-                        <Grid container spacing={1}>
+            <div>
+                <Header/>
+                <div id="body">
+                    <div>
+                        <Grid container>
+                            <Grid container spacing={1}>
+                                <Grid item>
+                                    <p className="ticker">{this.state.quote.longName}</p>
+                                </Grid>
+                                <Grid item>
+                                    <p className="ticker">({this.state.quote.symbol})</p>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1}>
+                                <Grid item>
+                                    <p id="exchange">{this.state.quote.quoteSourceName}.</p>
+                                </Grid>
+                                <Grid item>
+                                    <p id="currency">Currency in {this.state.quote.currency}.</p>
+                                </Grid>                  
+                            </Grid>
+                        </Grid>
+                        <Grid container 
+                            direction="row"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                            spacing={1}>
                             <Grid item>
-                                <p className="ticker">{this.state.quote.longName}</p>
+                                <p id="price">{Number(this.state.quote.regularMarketPrice).toFixed(2)}</p>
                             </Grid>
                             <Grid item>
-                                <p className="ticker">({this.state.quote.symbol})</p>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={1}>
-                            <Grid item>
-                                <p id="exchange">{this.state.quote.quoteSourceName}.</p>
+                                {regMarketPriceChange()}
                             </Grid>
                             <Grid item>
-                                <p id="currency">Currency in {this.state.quote.currency}.</p>
-                            </Grid>                  
+                                {regMarketPriceChangePer()}
+                            </Grid>
                         </Grid>
-      
-                    </Grid>
-                    <Grid container 
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={1}>
-                        <Grid item>
-                            <p id="price">{Number(this.state.quote.regularMarketPrice).toFixed(2)}</p>
-                        </Grid>
-                        <Grid item>
-                            {regMarketPriceChange()}
-                        </Grid>
-                        <Grid item>
-                            {regMarketPriceChangePer()}
-                        </Grid>
-                    </Grid>
-                </div>
-                <div>
-                    <Divider id="divider"/>
-                    <FormControl variant="outlined" id="expr">
-                        <FormHelperText>Expiration</FormHelperText>
-                        <Select native onChange={handleChange}>
-                            {
-                                this.state.expiration.map(expirationDate => {
-                                    const expr = convertDate(expirationDate)
-                                    return(
-                                        <option key={expirationDate} value={expirationDate}>{expr}</option>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </FormControl>
-                    <div id="callsputs">
-                        <ToggleButton
-                            value="color"
-                            selected={this.state.flag}
-                            onChange={() => {this.setState( {flag: true})}}
-                        >
-                            Calls
-                        </ToggleButton>
-                        <ToggleButton
-                            value="color"
-                            selected={!this.state.flag}
-                            onChange={() => {this.setState( {flag: false})}}
-                        >
-                            Puts
-                        </ToggleButton>
                     </div>
-                    {
-                        this.state.flag?
-                        <OptionChain chain={this.state.calls} /> :
-                        <OptionChain chain={this.state.puts} />
-                    }
+                    <div>
+                        <Divider id="divider"/>
+                        <FormControl variant="outlined" id="expr">
+                            <FormHelperText>Expiration</FormHelperText>
+                            <Select native onChange={handleChange}>
+                                {
+                                    this.state.expiration.map(expirationDate => {
+                                        const expr = convertDate(expirationDate)
+                                        return(
+                                            <option key={expirationDate} value={expirationDate}>{expr}</option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                        <div id="callsputs">
+                            <ToggleButton
+                                value="color"
+                                selected={this.state.flag}
+                                onChange={() => {this.setState( {flag: true})}}
+                            >
+                                Calls
+                            </ToggleButton>
+                            <ToggleButton
+                                value="color"
+                                selected={!this.state.flag}
+                                onChange={() => {this.setState( {flag: false})}}
+                            >
+                                Puts
+                            </ToggleButton>
+                        </div>
+                        {
+                            this.state.flag?
+                            <OptionChain chain={this.state.calls} /> :
+                            <OptionChain chain={this.state.puts} />
+                        }
+                    </div>
                 </div>
             </div>
         )

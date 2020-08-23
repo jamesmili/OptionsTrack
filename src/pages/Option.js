@@ -12,6 +12,7 @@ import OptionChain from '../components/OptionChain'
 const proxyURL = "https://cors-anywhere.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
 class Option extends React.Component{
+    update = 0
     constructor(props){
         super(props)
         this.state = {
@@ -21,52 +22,28 @@ class Option extends React.Component{
             calls: [],
             puts: [],
             expiration: [],
-            expirationDateEpoch: null,
+            expirationDateEpoch: "",
             expirationDate: "",
             flag: true,
+            marketStatus: "OPEN"
         }
         this.updateData = this.updateData.bind(this)
     }
     componentDidMount(){
-        axios.get(proxyURL + endpointURL + this.props.ticker, {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
-                'Content-Type': 'application/json'
+        this.updateData(this.state.expirationDateEpoch)
+        this.update = setInterval(function(){
+            if (this.state.marketStatus === "CLOSED"){
+                clearInterval(this.update);
             }
-        }).then(response => {
-            this.setState({
-                quote: response.data.optionChain.result[0].quote,
-                calls: response.data.optionChain.result[0].options[0].calls,
-                puts: response.data.optionChain.result[0].options[0].puts,
-                expiration: response.data.optionChain.result[0].expirationDates,
-                expirationDateEpoch: response.data.optionChain.result[0].options.expirationDate,
-            })
-        }).catch(error =>{
-            console.log(error)
-        })
+            this.updateData(this.state.expirationDateEpoch)
+         },50000)
     }
     componentDidUpdate(){
-        axios.get(proxyURL + endpointURL + this.props.ticker, {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            this.setState({
-                quote: response.data.optionChain.result[0].quote,
-                calls: response.data.optionChain.result[0].options[0].calls,
-                puts: response.data.optionChain.result[0].options[0].puts,
-                expiration: response.data.optionChain.result[0].expirationDates,
-                expirationDateEpoch: response.data.optionChain.result[0].options.expirationDate,
-            })
-        }).catch(error =>{
-            console.log(error)
-        })
+       this.updateData(this.state.expirationDateEpoch)
     }
     updateData(epoch){
-        axios.get(proxyURL + endpointURL + this.props.ticker + "?date=" + epoch, {
+        const e = epoch !== "" ? "?date=" + epoch : ""
+        axios.get(proxyURL + endpointURL + this.props.ticker + e, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',
@@ -78,7 +55,8 @@ class Option extends React.Component{
                 calls: response.data.optionChain.result[0].options[0].calls,
                 puts: response.data.optionChain.result[0].options[0].puts,
                 expiration: response.data.optionChain.result[0].expirationDates,
-                expirationDateEpoch: response.data.optionChain.result[0].options.expirationDate
+                expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
+                marketStatus: response.data.optionChain.result[0].quote.marketState
             })
         }).catch(error =>{
             console.log(error)

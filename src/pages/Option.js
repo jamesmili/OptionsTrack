@@ -12,7 +12,6 @@ import OptionChain from '../components/OptionChain'
 const proxyURL = "https://cors-anywhere.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
 class Option extends React.Component{
-    update = 0
     constructor(props){
         super(props)
         this.state = {
@@ -22,27 +21,28 @@ class Option extends React.Component{
             calls: [],
             puts: [],
             expiration: [],
-            expirationDateEpoch: "",
+            expirationDateEpoch: null,
             expirationDate: "",
             flag: true,
-            marketStatus: "OPEN"
+            marketStatus: "REGULAR",
+            intervalID: null
         }
         this.updateData = this.updateData.bind(this)
     }
     componentDidMount(){
-        this.updateData(this.state.expirationDateEpoch)
-        this.update = setInterval(function(){
-            if (this.state.marketStatus === "CLOSED"){
-                clearInterval(this.update);
-            }
-            this.updateData(this.state.expirationDateEpoch)
-         },50000)
+        var update = setInterval(this.updateData(this.state.expirationDateEpoch),10000)
+        this.setState({ intervalID: update })
     }
-    componentDidUpdate(){
-       this.updateData(this.state.expirationDateEpoch)
+
+    componentWillUnmount(){
+        if (this.state.marketStatus !== "CLOSED"){
+            clearInterval(this.state.intervalID);
+        }
     }
+
     updateData(epoch){
-        const e = epoch !== "" ? "?date=" + epoch : ""
+        const e = epoch ? "?date=" + epoch : ""
+        console.log(e)
         axios.get(proxyURL + endpointURL + this.props.ticker + e, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -50,6 +50,7 @@ class Option extends React.Component{
                 'Content-Type': 'application/json'
             }
         }).then(response => {
+            console.log(response)
             this.setState({
                 quote: response.data.optionChain.result[0].quote,
                 calls: response.data.optionChain.result[0].options[0].calls,
@@ -59,6 +60,7 @@ class Option extends React.Component{
                 marketStatus: response.data.optionChain.result[0].quote.marketState
             })
         }).catch(error =>{
+            console.log("error")
             console.log(error)
         })
     }

@@ -23,11 +23,11 @@ class Header extends React.Component{
             <div>    
                 <div id="header">
                     <Grid 
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="center"
-                        spacing={4}>
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center"
+                    spacing={4}>
                         <Grid item>
                             <Link to="/" id="headerTitle">
                                 <h1>Options Track</h1>

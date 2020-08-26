@@ -11,6 +11,7 @@ import OptionChain from '../components/OptionChain'
 
 const proxyURL = "https://cors-anywhere.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
+
 class Option extends React.Component{
     constructor(props){
         super(props)
@@ -23,26 +24,41 @@ class Option extends React.Component{
             expiration: [],
             expirationDateEpoch: null,
             expirationDate: "",
+            ticker: "",
             flag: true,
             marketStatus: "REGULAR",
-            intervalID: null
         }
         this.updateData = this.updateData.bind(this)
     }
+
+    componentWillMount(){
+        console.log("component will mount")
+        this.setState({ticker: this.props.ticker})
+        this.updateData(this.state.expirationDateEpoch)
+    }
+
     componentDidMount(){
-        var update = setInterval(this.updateData(this.state.expirationDateEpoch),10000)
-        this.setState({ intervalID: update })
+        console.log("component did update")
+        this.intervalID = setInterval(this.updateData(this.state.expirationDateEpoch),1000)
     }
 
     componentWillUnmount(){
-        if (this.state.marketStatus !== "CLOSED"){
-            clearInterval(this.state.intervalID);
+        console.log("component will unmount")
+        clearInterval(this.intervalID)
+    }
+
+    componentDidUpdate(){
+        console.log("component did update")
+        if (this.props.ticker !== this.state.ticker){
+            this.updateData(this.state.expirationDateEpoch)
+        }
+        if (this.state.marketStatus === "CLOSED"){
+            clearInterval(this.intervalID)
         }
     }
 
     updateData(epoch){
         const e = epoch ? "?date=" + epoch : ""
-        console.log(e)
         axios.get(proxyURL + endpointURL + this.props.ticker + e, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -50,17 +66,16 @@ class Option extends React.Component{
                 'Content-Type': 'application/json'
             }
         }).then(response => {
-            console.log(response)
             this.setState({
                 quote: response.data.optionChain.result[0].quote,
                 calls: response.data.optionChain.result[0].options[0].calls,
                 puts: response.data.optionChain.result[0].options[0].puts,
                 expiration: response.data.optionChain.result[0].expirationDates,
                 expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
-                marketStatus: response.data.optionChain.result[0].quote.marketState
+                marketStatus: response.data.optionChain.result[0].quote.marketState,
+                ticker: this.props.ticker
             })
         }).catch(error =>{
-            console.log("error")
             console.log(error)
         })
     }
@@ -183,8 +198,15 @@ class Option extends React.Component{
                         </div>
                         {
                             this.state.flag?
-                            <OptionChain chain={this.state.calls} /> :
-                            <OptionChain chain={this.state.puts} />
+                            <OptionChain chain={this.state.calls} 
+                                         quote={this.state.quote}
+                                         date={this.state.expirationDateEpoch}
+                                         call={true}/> 
+                            :
+                            <OptionChain chain={this.state.puts}
+                                         quote={this.state.quote}
+                                         date={this.state.expirationDateEpoch}
+                                         call={false}/> 
                         }
                     </div>
                 </div>

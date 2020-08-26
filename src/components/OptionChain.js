@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
+import { BSHolder, BS } from '../greeks/BlackScholes'; 
 
 class OptionChain extends React.Component{
     constructor(props){
@@ -56,7 +57,6 @@ class OptionChain extends React.Component{
         isAsc ? this.setState({order: 'desc'}) : this.setState({order: 'asc'});
         this.setState({orderBy: property});
     };
-
       
     render(){
         const headerCells = [
@@ -64,6 +64,11 @@ class OptionChain extends React.Component{
             { id: 'lastPrice', numeric: true, label: 'Last Price' },
             { id: 'bid', numeric: true, label: 'Bid' },
             { id: 'ask', numeric: true, label: 'Ask' },
+            { id: 'delta', numeric: true, label: 'Delta'},
+            { id: 'gamma', numeric: true, label: 'Gamma'},
+            { id: 'theta', numeric: true, label: 'Theta'},
+            { id: 'rho', numeric: true, label: 'Rho'},
+            { id: 'vega', numeric: true, label: 'Vega'},
             { id: 'change', numeric: true, label: 'Change' },
             { id: 'percentChange', numeric: true, label: '% Change' },
             { id: 'volume', numeric: true, label: 'Volume' },
@@ -132,6 +137,19 @@ class OptionChain extends React.Component{
                 )
             }
         }
+        const greeks = (x,sigma,r) => {
+            var timeleft = this.props.date - (Date.now()/1000);
+            var days = timeleft / 60 / 60 / 24 / 365
+            let greek = new BSHolder(this.props.quote.regularMarketPrice,x,r,sigma,days)
+            if (this.props.call){
+                return [ BS.cdelta(greek).toFixed(2), BS.gamma(greek).toFixed(5), 
+                        BS.ctheta(greek).toFixed(2), BS.crho(greek).toFixed(3), BS.vega(greek).toFixed(3)]
+            }else{
+                return [ BS.pdelta(greek).toFixed(2), BS.gamma(greek).toFixed(5),
+                        BS.ptheta(greek).toFixed(2), BS.prho(greek).toFixed(3), BS.vega(greek).toFixed(3)]
+            }
+
+        }
         return(
             <div>
                 <TableContainer>
@@ -168,6 +186,14 @@ class OptionChain extends React.Component{
                                         <TableCell>{row.lastPrice}</TableCell>
                                         <TableCell>{row.bid}</TableCell>
                                         <TableCell>{row.ask}</TableCell>
+                                        {
+                                            greeks(row.strike, row.impliedVolatility,0.09).map((v) => {
+                                                return(                                                
+                                                    <TableCell>{v}</TableCell>
+                                                )
+                                                }
+                                            )
+                                        }
                                         {change(row.change)}  
                                         {changePercentage(row.percentChange)}                         
                                         <TableCell>{row.volume}</TableCell>

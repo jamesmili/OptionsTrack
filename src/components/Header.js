@@ -20,7 +20,7 @@ class Header extends React.Component{
             this.setState({ticker: value})
         }
         return(
-            <div>    
+            <div>
                 <div id="header">
                     <Grid 
                     container
@@ -41,7 +41,7 @@ class Header extends React.Component{
                             />
                         </Grid>
                     </Grid>
-                </div>
+                </div>                
                 <Divider/>
             </div>
         )

@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
+import { Link } from "gatsby";
 import { BSHolder, BS } from '../greeks/BlackScholes'; 
 import { v1 as uuid } from 'uuid';
 
@@ -108,44 +109,34 @@ class OptionChain extends React.Component{
                 )
             }
         }
-        const inTheMoney = (strike, itm) => {
-            if (itm){
-                return(
-                    <TableCell>
-                        <Grid container spacing={3}
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="stretch"
-                        >
+        const inTheMoney = (strike, itm, contract) => {
+            return(
+                <TableCell>
+                    <Grid container spacing={3}
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="stretch"
+                    >
+                        {
+                            itm ? 
                             <div className="itm"></div>
-                            <p className="strike">{strike}</p>
-                        </Grid>
-                    </TableCell>
-                )                
-            }
-            else{
-                return(
-                    <TableCell>
-                        <Grid container spacing={3}
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="stretch"
-                        >
+                            :
                             <div className="otm"></div>
+
+                        }
+                        <Link to={`/options/${this.props.quote.symbol}/${contract}`}>
                             <p className="strike">{strike}</p>
-                        </Grid>
-                    </TableCell>
-                )
-            }
+                        </Link>
+                    </Grid>
+                </TableCell>
+            )                
         }
         const greeks = (x,sigma,r) => {
             /* add 72000 for market close time*/
             var expirationDate= new Date(this.props.date + 72000)
             var currentDate = new Date()
-            console.log(expirationDate.getTime() - currentDate.getTime()/1000)
             var timeDiff = expirationDate.getTime() - currentDate.getTime()/1000; 
             var days = timeDiff / (60 * 60 * 24 * 365)
-            console.log(days)
             let greek = new BSHolder(this.props.quote.regularMarketPrice,x,r,sigma,days)
             if (this.props.call){
                 return [ BS.cdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5), 
@@ -188,7 +179,7 @@ class OptionChain extends React.Component{
                             .map((row, index) => {
                                 return (
                                     <TableRow key={row.contractSymbol}>
-                                        {inTheMoney(row.strike, row.inTheMoney)}
+                                        {inTheMoney(row.strike, row.inTheMoney, row.contractSymbol)}
                                         <TableCell>{row.lastPrice}</TableCell>
                                         <TableCell>{row.bid}</TableCell>
                                         <TableCell>{row.ask}</TableCell>

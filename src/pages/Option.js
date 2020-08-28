@@ -17,7 +17,6 @@ class Option extends React.Component{
         super(props)
         this.state = {
             loading: true,
-            error: false,
             quote: {},
             calls: [],
             puts: [],

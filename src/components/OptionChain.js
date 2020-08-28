@@ -8,6 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
 import { BSHolder, BS } from '../greeks/BlackScholes'; 
+import { v1 as uuid } from 'uuid';
 
 class OptionChain extends React.Component{
     constructor(props){
@@ -70,7 +71,7 @@ class OptionChain extends React.Component{
             { id: 'rho', numeric: true, label: 'Rho'},
             { id: 'vega', numeric: true, label: 'Vega'},
             { id: 'change', numeric: true, label: 'Change' },
-            { id: 'percentChange', numeric: true, label: '% Change' },
+            { id: 'percentChange', numeric: true, label: '%Change' },
             { id: 'volume', numeric: true, label: 'Volume' },
             { id: 'openInterest', numeric: true, label: 'Open Interest' },
             { id: 'impliedVolatility', numeric: true, label: 'Implied Volatility'}
@@ -138,15 +139,20 @@ class OptionChain extends React.Component{
             }
         }
         const greeks = (x,sigma,r) => {
-            var timeleft = this.props.date - (Date.now()/1000);
-            var days = timeleft / 60 / 60 / 24 / 365
+            /* add 72000 for market close time*/
+            var expirationDate= new Date(this.props.date + 72000)
+            var currentDate = new Date()
+            console.log(expirationDate.getTime() - currentDate.getTime()/1000)
+            var timeDiff = expirationDate.getTime() - currentDate.getTime()/1000; 
+            var days = timeDiff / (60 * 60 * 24 * 365)
+            console.log(days)
             let greek = new BSHolder(this.props.quote.regularMarketPrice,x,r,sigma,days)
             if (this.props.call){
-                return [ BS.cdelta(greek).toFixed(2), BS.gamma(greek).toFixed(5), 
-                        BS.ctheta(greek).toFixed(2), BS.crho(greek).toFixed(3), BS.vega(greek).toFixed(3)]
+                return [ BS.cdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5), 
+                        BS.ctheta(greek).toFixed(5), BS.crho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
             }else{
-                return [ BS.pdelta(greek).toFixed(2), BS.gamma(greek).toFixed(5),
-                        BS.ptheta(greek).toFixed(2), BS.prho(greek).toFixed(3), BS.vega(greek).toFixed(3)]
+                return [ BS.pdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5),
+                        BS.ptheta(greek).toFixed(5), BS.prho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
             }
 
         }
@@ -187,9 +193,9 @@ class OptionChain extends React.Component{
                                         <TableCell>{row.bid}</TableCell>
                                         <TableCell>{row.ask}</TableCell>
                                         {
-                                            greeks(row.strike, row.impliedVolatility,0.09).map((v) => {
+                                            greeks(row.strike, row.impliedVolatility,0.02).map((v) => {
                                                 return(                                                
-                                                    <TableCell>{v}</TableCell>
+                                                    <TableCell key={uuid()}>{v}</TableCell>
                                                 )
                                                 }
                                             )

@@ -24,60 +24,56 @@ class Option extends React.Component{
             expiration: [],
             expirationDateEpoch: null,
             expirationDate: "",
-            ticker: "",
+            ticker: this.props.ticker,
             flag: true,
             marketStatus: "REGULAR",
         }
         this.updateData = this.updateData.bind(this)
     }
 
-    componentWillMount(){
-        console.log("component will mount")
-        this.setState({ticker: this.props.ticker})
+    async componentDidMount(){
         this.updateData(this.state.expirationDateEpoch)
-    }
-
-    componentDidMount(){
-        console.log("component did update")
-        this.intervalID = setInterval(this.updateData(this.state.expirationDateEpoch),1000)
+        this.intervalID = setInterval(() => {
+            this.updateData(this.state.expirationDateEpoch)
+        },1000)
     }
 
     componentWillUnmount(){
-        console.log("component will unmount")
         clearInterval(this.intervalID)
     }
 
     componentDidUpdate(){
-        console.log("component did update")
         if (this.props.ticker !== this.state.ticker){
             this.updateData(this.state.expirationDateEpoch)
         }
-        if (this.state.marketStatus === "CLOSED"){
+        if (this.state.marketStatus !== "REGULAR"){
             clearInterval(this.intervalID)
         }
     }
 
-    updateData(epoch){
-        const e = epoch ? "?date=" + epoch : ""
-        axios.get(proxyURL + endpointURL + this.props.ticker + e, {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            this.setState({
-                quote: response.data.optionChain.result[0].quote,
-                calls: response.data.optionChain.result[0].options[0].calls,
-                puts: response.data.optionChain.result[0].options[0].puts,
-                expiration: response.data.optionChain.result[0].expirationDates,
-                expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
-                marketStatus: response.data.optionChain.result[0].quote.marketState,
-                ticker: this.props.ticker
+    async updateData(epoch){
+        if (this.state.marketStatus === "REGULAR"){
+            const e = epoch ? "?date=" + epoch : ""
+            axios.get(proxyURL + endpointURL + this.props.ticker + e, {
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Expose-Headers' : 'access-control-allow-origin',
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                this.setState({
+                    quote: response.data.optionChain.result[0].quote,
+                    calls: response.data.optionChain.result[0].options[0].calls,
+                    puts: response.data.optionChain.result[0].options[0].puts,
+                    expiration: response.data.optionChain.result[0].expirationDates,
+                    expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
+                    marketStatus: response.data.optionChain.result[0].quote.marketState,
+                    ticker: this.props.ticker
+                })
+            }).catch(error =>{
+                console.log(error)
             })
-        }).catch(error =>{
-            console.log(error)
-        })
+        }
     }
 
     render(){

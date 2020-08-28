@@ -3,6 +3,7 @@ import Divider from '@material-ui/core/Divider';
 import { Link, navigate } from "gatsby"
 import Grid from '@material-ui/core/Grid';
 import SearchBar from "material-ui-search-bar";
+import '../styles/styles.css'
 
 
 class Header extends React.Component{

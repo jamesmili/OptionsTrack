@@ -6,8 +6,8 @@ import FormControl from '@material-ui/core/FormControl';
 import { ToggleButton } from '@material-ui/lab';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-import Header from '../components/Header'
-import OptionChain from '../components/OptionChain'
+import Header from '../components/Header';
+import OptionChain from '../components/OptionChain';
 
 const proxyURL = "https://cors-anywhere.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
@@ -51,28 +51,27 @@ class Option extends React.Component{
     }
 
     async updateData(epoch){
-        if (this.state.marketStatus === "REGULAR"){
-            const e = epoch ? "?date=" + epoch : ""
-            axios.get(proxyURL + endpointURL + this.props.ticker + e, {
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Expose-Headers' : 'access-control-allow-origin',
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                this.setState({
-                    quote: response.data.optionChain.result[0].quote,
-                    calls: response.data.optionChain.result[0].options[0].calls,
-                    puts: response.data.optionChain.result[0].options[0].puts,
-                    expiration: response.data.optionChain.result[0].expirationDates,
-                    expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
-                    marketStatus: response.data.optionChain.result[0].quote.marketState,
-                    ticker: this.props.ticker
-                })
-            }).catch(error =>{
-                console.log(error)
+        console.log("update")
+        const e = epoch ? "?date=" + epoch : ""
+        axios.get(proxyURL + endpointURL + this.props.ticker + e, {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            this.setState({
+                quote: response.data.optionChain.result[0].quote,
+                calls: response.data.optionChain.result[0].options[0].calls,
+                puts: response.data.optionChain.result[0].options[0].puts,
+                expiration: response.data.optionChain.result[0].expirationDates,
+                expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
+                marketStatus: response.data.optionChain.result[0].quote.marketState,
+                ticker: this.props.ticker
             })
-        }
+        }).catch(error =>{
+            console.log(error)
+        })
     }
 
     render(){

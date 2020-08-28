@@ -32,6 +32,10 @@ html{
 }
 .strike{
   float: right;
+  color: black;
+}
+.strike:hover{
+  text-decoration: underline;
 }
 .wrapper{
   margin: 0 auto
@@ -48,6 +52,7 @@ html{
 #body{
   margin-left: 25px;
   margin-right: 25px;
+  margin-top: 50px;
 }
 
 #calls{
@@ -82,11 +87,15 @@ html{
 #headerTitle{
   text-decoration: none;
   color: black;
-  margin-bottom: 0px;
+  margin-right: 20px;
 }
+
 #header{
-  margin-left: 25px;
-  margin-right: 25px;
+  position:fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #FAF9F9;
 }
 #appBar{
   background: inherit;
@@ -95,7 +104,12 @@ html{
 #searchBar{
   margin: 0 auto;
   max-width: 800px;
+} 
+#table{
+  width:100%;
+  overflow: none;
 }
+
 @media only screen and (max-width: 353px){
   #expr{
     float: none;
@@ -107,14 +121,11 @@ html{
     margin-left: 0px;
     margin-right: 0px;
   }
-  #header{
-    margin-left: 0px;
-    margin-right: 0px;
-  }
   #headerTitle{
     margin: 0px;
+    margin-bottom: 0px;
   }
   #searchBar{
-    margin: 0px;
+    width: 100%;
   }
 }

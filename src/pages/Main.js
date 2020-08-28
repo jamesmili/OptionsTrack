@@ -1,19 +1,15 @@
 import React from "react"
-import { Link } from "gatsby"
+import { navigate } from "gatsby"
 import Header from '../components/Header'
 
 class Main extends React.Component{
-
+    componendDidMount(){
+        navigate('/options/TSLA')
+    }
     render(){
-        const ticker = "AAPL"
         return (
             <div>
                 <Header/>
-                <Link to={`/options/${ticker}`}>
-                    <span>
-                        {ticker}
-                    </span>
-                </Link>
             </div>
         )
     }

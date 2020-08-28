@@ -2,10 +2,12 @@ import React from 'react'
 import Header from '../components/Header'
 import axios from "axios";
 import { AreaChart, Area, CartesianGrid, Tooltip } from 'recharts';
+import ContractInfo from '../components/ContractInfo';
 
 const proxyURL = "https://cors-anywhere.herokuapp.com/";
 const endpointURL = "https://query1.finance.yahoo.com/v7/finance/chart/"
 const interval = "?period1=0&period2=9999999999&interval=1d"
+const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
 
 class Contract extends React.Component{
     constructor(props){
@@ -15,9 +17,11 @@ class Contract extends React.Component{
             timestamp: [],
             quote: [],
             data: [],
-            price: 0.00
+            price: 0.00,
+            date: ""
         }
         this.hover = this.hover.bind(this)
+        this.convertDate = this.convertDate.bind(this)
         this.tooltip = this.tooltip.bind(this)
     }
     componentDidMount(){
@@ -32,10 +36,15 @@ class Contract extends React.Component{
             var p = 0.00
             this.setState({
                 meta: response.data.chart.result[0].meta,
-                timestamp: response.data.chart.result[0].timestamp,
+                timestamp: response.data.chart.result[0].timestamp.map((d) => {
+                    return this.convertDate(d)
+                }),
                 quote: response.data.chart.result[0].indicators.quote,
-                price: response.data.chart.result[0].indicators.quote[0].close[response.data.chart.result[0].indicators.quote[0].close.length - 1],
-                data: response.data.chart.result[0].timestamp.map((t,index) => {
+                price: response.data.chart.result[0].indicators.quote[0].close[response.data.chart.result[0].indicators.quote[0].close.length - 1].value,
+            })
+            this.setState({
+                date: this.state.timestamp[this.state.timestamp.length - 1],
+                data:this.state.timestamp.map((t,index) => {
                     if (!response.data.chart.result[0].indicators.quote[0].close[index]){
                         if (index > 0){
                             p = prevPrice
@@ -58,9 +67,17 @@ class Contract extends React.Component{
 
     hover(data){
         if (data.isTooltipActive && data.activePayload) {
-            console.log(data)
-            this.setState({ price: data.activePayload[0].value.toFixed(2) })
+            this.setState({ 
+                price: data.activePayload[0].value.toFixed(2), 
+                date: data.activePayload[0].payload.date
+            })
         }
+    }
+
+    convertDate(epoch){
+        const date = new Date(epoch*1000)
+        const expr = month[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getFullYear()
+        return expr
     }
     tooltip(data){
 
@@ -80,8 +97,12 @@ class Contract extends React.Component{
             <div>
                 <Header />
                 <div id="body">
-                    <h1>${this.state.price}</h1>
-                    {chart}
+                    <div id="graph">
+                        <h1>${this.state.price}</h1>
+                        <h4>{this.state.date}</h4>
+                        {chart}
+                    </div>
+                    <ContractInfo data={this.state.meta}/>
                 </div>
             </div>
         )

@@ -149,8 +149,8 @@ class OptionChain extends React.Component{
         }
         return(
             <div>
-                <TableContainer>
-                    <Table>
+                <TableContainer id="table">
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
                                 { 

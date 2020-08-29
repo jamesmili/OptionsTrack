@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[10],{"0JEz":function(t,e,n){"use strict";n.r(e);var a=n("q1tI"),c=n.n(a),o=n("YwZP"),r=n("vS4Y"),u=n("ml4O");e.default=function(){return c.a.createElement(o.Router,null,c.a.createElement(r.default,{path:"/options/:ticker"}),c.a.createElement(u.default,{path:"/options/:ticker/:contract"}))}}}]);
-//# sourceMappingURL=component---src-pages-options-js-94aba8c621ad08726786.js.map

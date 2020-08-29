@@ -50,6 +50,7 @@ html{
 }
 
 #body{
+  position: absolute;
   margin-left: 25px;
   margin-right: 25px;
   margin-top: 50px;
@@ -105,10 +106,6 @@ html{
   margin: 0 auto;
   max-width: 800px;
 } 
-#table{
-  width:100%;
-  overflow: none;
-}
 
 @media only screen and (max-width: 353px){
   #expr{
@@ -118,6 +115,7 @@ html{
     float: none;
   }
   #body{
+    position: absolute;
     margin-left: 0px;
     margin-right: 0px;
   }

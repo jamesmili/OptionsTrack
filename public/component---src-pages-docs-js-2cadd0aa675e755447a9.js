@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[8],{iaV1:function(n,t,e){"use strict";e.r(t);var o=e("dI71"),r=e("q1tI"),i=e.n(r),u=function(n){function t(){return n.apply(this,arguments)||this}return Object(o.a)(t,n),t.prototype.render=function(){return i.a.createElement("div",null,"Docs")},t}(i.a.Component);t.default=u}}]);
+//# sourceMappingURL=component---src-pages-docs-js-2cadd0aa675e755447a9.js.map

@@ -7,14 +7,3 @@ exports.onCreatePage = async ({ page, actions }) => {
         createPage(page)
     }
 }
-
-exports.createPages = ({ graphql, actions }) => {
-    const { createRedirect } = actions
-    createRedirect({
-        fromPath: '/',
-        exactPath: true,
-        isPermanent: false,
-        redirectInBrowser: true,
-        toPath: '/options/TSLA'
-    });
-  }

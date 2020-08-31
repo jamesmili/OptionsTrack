@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, navigate } from "gatsby"
-import Grid from '@material-ui/core/Grid';
 import SearchBar from "material-ui-search-bar";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';

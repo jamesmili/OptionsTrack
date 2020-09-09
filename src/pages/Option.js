@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Header from '../components/Header';
 import OptionChain from '../components/OptionChain';
 
-const proxyURL = "https://cors-anywhere.herokuapp.com/";
+const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
 
 class Option extends React.Component{

@@ -3,6 +3,7 @@ import Header from '../components/Header'
 import axios from "axios";
 import { AreaChart, Area, CartesianGrid, Tooltip } from 'recharts';
 import ContractInfo from '../components/ContractInfo';
+import Grid from '@material-ui/core/Grid';
 
 const proxyURL = "https://cors-anywhere.herokuapp.com/";
 const endpointURL = "https://query1.finance.yahoo.com/v7/finance/chart/"
@@ -97,12 +98,20 @@ class Contract extends React.Component{
             <div>
                 <Header />
                 <div id="body">
-                    <div id="graph">
-                        <h1>${this.state.price}</h1>
-                        <h4>{this.state.date}</h4>
-                        {chart}
-                    </div>
-                    <ContractInfo data={this.state.meta}/>
+                    <Grid container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="flex-start">
+                        <Grid item> 
+                            <h2>{this.props.contract}</h2>
+                            <h1>${this.state.price}</h1>
+                            <h4>{this.state.date}</h4>
+                            {chart}
+                        </Grid>
+                        <Grid item>
+                            <ContractInfo contract={this.props.contract} />
+                        </Grid>
+                    </Grid>
                 </div>
             </div>
         )

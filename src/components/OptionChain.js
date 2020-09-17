@@ -17,6 +17,7 @@ class OptionChain extends React.Component{
         this.state = {
             order: 'asc',
             orderBy: 'strike',
+            greeks: []
         }
         this.descendingComparator = this.descendingComparator.bind(this)
         this.getComparator = this.getComparator.bind(this)
@@ -81,15 +82,15 @@ class OptionChain extends React.Component{
             const c = Number(chge).toFixed(2)
             if (c < 0){
                 return(
-                    <TableCell><div className="negative">{Number(c).toFixed(2)}</div></TableCell>
+                    <TableCell style={{padding: cellSize}}><div className="negative">{Number(c).toFixed(2)}</div></TableCell>
                 )
             }else if (c > 0){
                 return(
-                    <TableCell><div className="positive">+{Number(c).toFixed(2)}</div></TableCell>
+                    <TableCell style={{padding: cellSize}}><div className="positive">+{Number(c).toFixed(2)}</div></TableCell>
                 )
             }else{
                 return(
-                    <TableCell>-</TableCell>
+                    <TableCell style={{padding: cellSize}}>-</TableCell>
                 )
             }
         }
@@ -97,21 +98,21 @@ class OptionChain extends React.Component{
             const c = Number(chge).toFixed(2)
             if (c < 0){
                 return(
-                    <TableCell><div className="negative">{Number(c).toFixed(2)}%</div></TableCell>
+                    <TableCell style={{padding: cellSize}}><div className="negative">{Number(c).toFixed(2)}%</div></TableCell>
                 )
             }else if (c > 0){
                 return(
-                    <TableCell><div className="positive">+{Number(c).toFixed(2)}%</div></TableCell>
+                    <TableCell style={{padding: cellSize}}><div className="positive">+{Number(c).toFixed(2)}%</div></TableCell>
                 )
             }else{
                 return(
-                    <TableCell>-</TableCell>
+                    <TableCell style={{padding: cellSize}}>-</TableCell>
                 )
             }
         }
         const inTheMoney = (strike, itm, contract) => {
             return(
-                <TableCell>
+                <TableCell style={{paddingRight: cellSize}}>
                     <Grid container spacing={3}
                     direction="row"
                     justify="flex-start"
@@ -124,7 +125,7 @@ class OptionChain extends React.Component{
                             <div className="otm"></div>
 
                         }
-                        <Link to={`/options/${this.props.quote.symbol}/${contract}`}>
+                        <Link to={`/options/${this.props.quote.symbol}/${contract}`} >
                             <p className="strike">{strike}</p>
                         </Link>
                     </Grid>
@@ -139,18 +140,24 @@ class OptionChain extends React.Component{
             var days = timeDiff / (60 * 60 * 24 * 365)
             let greek = new BSHolder(this.props.quote.regularMarketPrice,x,r,sigma,days)
             if (this.props.call){
-                return [ BS.cdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5), 
+                var c = [ BS.cdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5), 
                         BS.ctheta(greek).toFixed(5), BS.crho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
+                return c
             }else{
-                return [ BS.pdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5),
+                var p = [ BS.pdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5),
                         BS.ptheta(greek).toFixed(5), BS.prho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
+                return p
             }
 
         }
+
+        const cellSize = "7px"
+        const fontSize = "12px"
+
         return(
             <div>
                 <TableContainer id="table">
-                    <Table size="small">
+                    <Table>
                         <TableHead>
                             <TableRow>
                                 { 
@@ -159,7 +166,7 @@ class OptionChain extends React.Component{
                                         <TableCell
                                             key={headCell.id}
                                             sortDirection={this.state.orderBy === headCell.id ? this.state.order : false}
-                                        >
+                                            style={{padding: cellSize, fontSize: fontSize}}>
                                             <TableSortLabel
                                             active={this.state.orderBy === headCell.id}
                                             direction={this.state.orderBy === headCell.id ? this.state.order : 'asc'}
@@ -180,22 +187,22 @@ class OptionChain extends React.Component{
                                 return (
                                     <TableRow key={row.contractSymbol}>
                                         {inTheMoney(row.strike, row.inTheMoney, row.contractSymbol)}
-                                        <TableCell>{row.lastPrice}</TableCell>
-                                        <TableCell>{row.bid}</TableCell>
-                                        <TableCell>{row.ask}</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{row.lastPrice}</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{row.bid}</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{row.ask}</TableCell>
                                         {
                                             greeks(row.strike, row.impliedVolatility,0.02).map((v) => {
                                                 return(                                                
-                                                    <TableCell key={uuid()}>{v}</TableCell>
+                                                    <TableCell style={{padding: cellSize}} key={uuid()}>{v}</TableCell>
                                                 )
                                                 }
                                             )
                                         }
                                         {change(row.change)}  
                                         {changePercentage(row.percentChange)}                         
-                                        <TableCell>{row.volume}</TableCell>
-                                        <TableCell>{row.openInterest}</TableCell>
-                                        <TableCell>{Number(row.impliedVolatility*100).toFixed(2)}%</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{row.volume}</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{row.openInterest}</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{Number(row.impliedVolatility*100).toFixed(2)}%</TableCell>
                                     </TableRow>
                                 )
                             })

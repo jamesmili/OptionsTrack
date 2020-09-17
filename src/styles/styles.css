@@ -98,6 +98,10 @@ html{
   right: 0;
   background-color: #FAF9F9;
 }
+
+.tableCell{
+  padding: 90px;
+}
 #appBar{
   background: inherit;
 }
@@ -106,6 +110,12 @@ html{
   margin: 0 auto;
   max-width: 800px;
 } 
+#info{
+  width: 100%;
+}
+.overviewText{
+  text-align: justify;
+}
 
 @media only screen and (max-width: 353px){
   #expr{

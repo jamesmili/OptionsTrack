@@ -9,6 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import Header from '../components/Header';
 import OptionChain from '../components/OptionChain';
 
+import { BSHolder, BS } from '../greeks/BlackScholes'; 
+
 const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
 
@@ -27,7 +29,8 @@ class Option extends React.Component{
             flag: true,
             marketStatus: "REGULAR",
         }
-        this.updateData = this.updateData.bind(this)
+        this.updateData = this.updateData.bind(this);
+        this.greeks = this.greeks.bind(this);
     }
 
     async componentDidMount(){
@@ -62,16 +65,57 @@ class Option extends React.Component{
         }).then(response => {
             this.setState({
                 quote: response.data.optionChain.result[0].quote,
-                calls: response.data.optionChain.result[0].options[0].calls,
-                puts: response.data.optionChain.result[0].options[0].puts,
                 expiration: response.data.optionChain.result[0].expirationDates,
                 expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
                 marketStatus: response.data.optionChain.result[0].quote.marketState,
-                ticker: this.props.ticker
+                ticker: this.props.ticker,
+            })
+            this.setState({
+                calls: response.data.optionChain.result[0].options[0].calls.map((op) => {
+                    var x = this.greeks(op, true)
+                    op['delta'] = x[0]
+                    op['gamma'] = x[1]
+                    op['theta'] = x[2]
+                    op['rho'] = x[3]
+                    op['vega'] = x[4]
+                    return op
+                }),
+                puts: response.data.optionChain.result[0].options[0].puts.map((op) => {
+                    var x = this.greeks(op, true)
+                    op['delta'] = x[0]
+                    op['gamma'] = x[1]
+                    op['theta'] = x[2]
+                    op['rho'] = x[3]
+                    op['vega'] = x[4]
+                    return op
+                })
             })
         }).catch(error =>{
             console.log(error)
         })
+    }
+
+    greeks(op, call){
+        var x = op.strike
+        var r = 0.02
+        var sigma = op.impliedVolatility
+        /* add 72000 for market close time*/
+        var expirationDate= new Date(this.state.expirationDateEpoch + 72000)
+        var currentDate = new Date()
+        var timeDiff = expirationDate.getTime() - currentDate.getTime()/1000; 
+        var days = timeDiff / (60 * 60 * 24 * 365)
+        console.log(this.state.quote.regularMarketPrice,x,r,sigma,days)
+        let greek = new BSHolder(this.state.quote.regularMarketPrice,x,r,sigma,days)
+        if (call){
+            var c = [ BS.cdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5), 
+                    BS.ctheta(greek).toFixed(5), BS.crho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
+            return c
+        }else{
+            var p = [ BS.pdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5),
+                    BS.ptheta(greek).toFixed(5), BS.prho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
+            return p
+        }
+
     }
 
     render(){

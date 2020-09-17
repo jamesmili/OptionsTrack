@@ -8,8 +8,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
 import { Link } from "gatsby";
-import { BSHolder, BS } from '../greeks/BlackScholes'; 
-import { v1 as uuid } from 'uuid';
 
 class OptionChain extends React.Component{
     constructor(props){
@@ -17,7 +15,6 @@ class OptionChain extends React.Component{
         this.state = {
             order: 'asc',
             orderBy: 'strike',
-            greeks: []
         }
         this.descendingComparator = this.descendingComparator.bind(this)
         this.getComparator = this.getComparator.bind(this)
@@ -132,24 +129,6 @@ class OptionChain extends React.Component{
                 </TableCell>
             )                
         }
-        const greeks = (x,sigma,r) => {
-            /* add 72000 for market close time*/
-            var expirationDate= new Date(this.props.date + 72000)
-            var currentDate = new Date()
-            var timeDiff = expirationDate.getTime() - currentDate.getTime()/1000; 
-            var days = timeDiff / (60 * 60 * 24 * 365)
-            let greek = new BSHolder(this.props.quote.regularMarketPrice,x,r,sigma,days)
-            if (this.props.call){
-                var c = [ BS.cdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5), 
-                        BS.ctheta(greek).toFixed(5), BS.crho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
-                return c
-            }else{
-                var p = [ BS.pdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5),
-                        BS.ptheta(greek).toFixed(5), BS.prho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
-                return p
-            }
-
-        }
 
         const cellSize = "7px"
         const fontSize = "12px"
@@ -190,14 +169,11 @@ class OptionChain extends React.Component{
                                         <TableCell style={{padding: cellSize}}>{row.lastPrice}</TableCell>
                                         <TableCell style={{padding: cellSize}}>{row.bid}</TableCell>
                                         <TableCell style={{padding: cellSize}}>{row.ask}</TableCell>
-                                        {
-                                            greeks(row.strike, row.impliedVolatility,0.02).map((v) => {
-                                                return(                                                
-                                                    <TableCell style={{padding: cellSize}} key={uuid()}>{v}</TableCell>
-                                                )
-                                                }
-                                            )
-                                        }
+                                        <TableCell style={{padding: cellSize}}>{row.delta}</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{row.gamma}</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{row.theta}</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{row.rho}</TableCell>
+                                        <TableCell style={{padding: cellSize}}>{row.vega}</TableCell>
                                         {change(row.change)}  
                                         {changePercentage(row.percentChange)}                         
                                         <TableCell style={{padding: cellSize}}>{row.volume}</TableCell>

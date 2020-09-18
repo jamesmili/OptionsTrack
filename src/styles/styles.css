@@ -49,11 +49,13 @@ html{
   float: left;
 }
 
-#body{
+#container{
   position: absolute;
+  width: 95%;
   margin-left: 25px;
   margin-right: 25px;
   margin-top: 50px;
+
 }
 
 #calls{
@@ -124,7 +126,7 @@ html{
   #callsputs{
     float: none;
   }
-  #body{
+  #container{
     position: absolute;
     margin-left: 0px;
     margin-right: 0px;

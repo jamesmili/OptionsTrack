@@ -97,7 +97,7 @@ class Contract extends React.Component{
         return(
             <div>
                 <Header />
-                <div id="body">
+                <div id="container">
                     <Grid container
                         direction="row"
                         justify="space-between"

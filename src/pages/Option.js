@@ -33,11 +33,9 @@ class Option extends React.Component{
         this.greeks = this.greeks.bind(this);
     }
 
-    async componentDidMount(){
+    componentDidMount(){
         this.updateData(this.state.expirationDateEpoch)
-        this.intervalID = setInterval(() => {
-            this.updateData(this.state.expirationDateEpoch)
-        },1000)
+
     }
 
     componentWillUnmount(){
@@ -53,7 +51,7 @@ class Option extends React.Component{
         }
     }
 
-    async updateData(epoch){
+    updateData(epoch){
         console.log("update")
         const e = epoch ? "?date=" + epoch : ""
         axios.get(proxyURL + endpointURL + this.props.ticker + e, {
@@ -104,7 +102,6 @@ class Option extends React.Component{
         var currentDate = new Date()
         var timeDiff = expirationDate.getTime() - currentDate.getTime()/1000; 
         var days = timeDiff / (60 * 60 * 24 * 365)
-        console.log(this.state.quote.regularMarketPrice,x,r,sigma,days)
         let greek = new BSHolder(this.state.quote.regularMarketPrice,x,r,sigma,days)
         if (call){
             var c = [ BS.cdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5), 
@@ -165,9 +162,9 @@ class Option extends React.Component{
         }
         const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
         return(
-            <div>
+            <div id="body">
                 <Header/>
-                <div id="body">
+                <div id="container">
                     <div>
                         <Grid container>
                             <Grid container spacing={1}>

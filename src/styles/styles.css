@@ -100,7 +100,9 @@ html{
   right: 0;
   background-color: #FAF9F9;
 }
-
+#table{
+  flex: 1 1 auto;
+}
 .tableCell{
   padding: 90px;
 }

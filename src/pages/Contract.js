@@ -33,6 +33,7 @@ class Contract extends React.Component{
                 'Content-Type': 'application/json'
             }
         }).then(response => {
+            console.log(response)
             var prevPrice = 0.00
             var p = 0.00
             this.setState({

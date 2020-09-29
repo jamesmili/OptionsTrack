@@ -5,10 +5,15 @@ html{
 .positive{
   background-color: #84FFA0;
   text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+
 }
 .negative{
   background-color: #FFA296;
   text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .gain{
   color: #00CB00;
@@ -18,14 +23,14 @@ html{
 }
 .itm{
   background-color: #84FFA0;
-  height: 50px;
+  height: 45px;
   width:5px;
   margin-right: 5px;
   float: left;
 }
 .otm{
   background-color: #FFA296;
-  height: 50px;
+  height: 45px;
   width:5px;
   margin-right: 5px;
   float: left;
@@ -100,8 +105,8 @@ html{
   right: 0;
   background-color: #FAF9F9;
 }
-#table{
-  flex: 1 1 auto;
+#tableFunction{
+  margin-bottom: 100px;
 }
 .tableCell{
   padding: 90px;
@@ -139,5 +144,8 @@ html{
   }
   #searchBar{
     width: 100%;
+  }
+  #tableFunction{
+    margin-bottom: 10px;
   }
 }

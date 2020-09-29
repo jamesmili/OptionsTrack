@@ -181,34 +181,36 @@ class Option extends React.Component{
                     </div>
                     <div>
                         <Divider id="divider"/>
-                        <FormControl variant="outlined" id="expr">
-                            <FormHelperText>Expiration</FormHelperText>
-                            <Select native onChange={handleChange}>
-                                {
-                                    this.state.expiration.map(expirationDate => {
-                                        const expr = convertDate(expirationDate)
-                                        return(
-                                            <option key={expirationDate} value={expirationDate}>{expr}</option>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                        <div id="callsputs">
-                            <ToggleButton
-                                value="color"
-                                selected={this.state.flag}
-                                onChange={() => {this.setState( {flag: true})}}
-                            >
-                                Calls
-                            </ToggleButton>
-                            <ToggleButton
-                                value="color"
-                                selected={!this.state.flag}
-                                onChange={() => {this.setState( {flag: false})}}
-                            >
-                                Puts
-                            </ToggleButton>
+                        <div id="tableFunction">
+                            <FormControl variant="outlined" id="expr">
+                                <FormHelperText>Expiration</FormHelperText>
+                                <Select native onChange={handleChange}>
+                                    {
+                                        this.state.expiration.map(expirationDate => {
+                                            const expr = convertDate(expirationDate)
+                                            return(
+                                                <option key={expirationDate} value={expirationDate}>{expr}</option>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                            <div id="callsputs">
+                                <ToggleButton
+                                    value="color"
+                                    selected={this.state.flag}
+                                    onChange={() => {this.setState( {flag: true})}}
+                                >
+                                    Calls
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="color"
+                                    selected={!this.state.flag}
+                                    onChange={() => {this.setState( {flag: false})}}
+                                >
+                                    Puts
+                                </ToggleButton>
+                            </div>
                         </div>
                         {
                             this.state.flag?

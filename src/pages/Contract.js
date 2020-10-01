@@ -19,7 +19,8 @@ class Contract extends React.Component{
             quote: [],
             data: [],
             price: 0.00,
-            date: ""
+            date: "",
+            symbol: null,
         }
         this.hover = this.hover.bind(this)
         this.convertDate = this.convertDate.bind(this)
@@ -33,7 +34,6 @@ class Contract extends React.Component{
                 'Content-Type': 'application/json'
             }
         }).then(response => {
-            console.log(response)
             var prevPrice = 0.00
             var p = 0.00
             this.setState({
@@ -42,7 +42,8 @@ class Contract extends React.Component{
                     return this.convertDate(d)
                 }),
                 quote: response.data.chart.result[0].indicators.quote,
-                price: response.data.chart.result[0].indicators.quote[0].close[response.data.chart.result[0].indicators.quote[0].close.length - 1].value,
+                price: Number(response.data.chart.result[0].meta.regularMarketPrice).toFixed(2),
+                symbol: response.data.chart.result[0].meta.symbol
             })
             this.setState({
                 date: this.state.timestamp[this.state.timestamp.length - 1],
@@ -65,6 +66,7 @@ class Contract extends React.Component{
         }).catch(error =>{
             console.log(error)
         })
+
     }
 
     hover(data){
@@ -96,21 +98,22 @@ class Contract extends React.Component{
             </AreaChart>
         )
         return(
-            <div>
+            <div id="body">
                 <Header />
                 <div id="container">
                     <Grid container
                         direction="row"
-                        justify="space-between"
-                        alignItems="flex-start">
+                        justify="center"
+                        alignItems="center">
                         <Grid item> 
-                            <h2>{this.props.contract}</h2>
+                            <h2>{this.state.symbol}</h2>
                             <h1>${this.state.price}</h1>
                             <h4>{this.state.date}</h4>
                             {chart}
                         </Grid>
                         <Grid item>
-                            <ContractInfo contract={this.props.contract} />
+                            <ContractInfo ticker={this.props.ticker}
+                                          contract={this.props.contract}/>
                         </Grid>
                     </Grid>
                 </div>

@@ -7,7 +7,6 @@ html{
   text-align: center;
   padding-left: 10px;
   padding-right: 10px;
-
 }
 .negative{
   background-color: #FFA296;
@@ -45,6 +44,7 @@ html{
 .wrapper{
   margin: 0 auto
 }
+
 #expr{
   float: right;
   margin-right: 20px;
@@ -60,8 +60,12 @@ html{
   margin-left: 25px;
   margin-right: 25px;
   margin-top: 50px;
-
 }
+
+#table{
+  padding-top: 10px;
+}
+
 
 #calls{
   background-color:#84FFA0;
@@ -106,10 +110,13 @@ html{
   background-color: #FAF9F9;
 }
 #tableFunction{
-  margin-bottom: 100px;
+  margin-bottom: 10px;
 }
 .tableCell{
   padding: 90px;
+}
+.tableFont{
+  font-size: 10px;
 }
 #appBar{
   background: inherit;

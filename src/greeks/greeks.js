@@ -11,12 +11,12 @@ export default function greeks(op, call, date, marketPrice){
     var days = timeDiff / (60 * 60 * 24 * 365)
     let greek = new BSHolder(marketPrice,x,r,sigma,days)
     if (call){
-        var c = [ BS.cdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5), 
-                BS.ctheta(greek).toFixed(5), BS.crho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
+        var c = [ BS.cdelta(greek).toFixed(3), BS.gamma(greek).toFixed(4), 
+                BS.ctheta(greek).toFixed(3), BS.crho(greek).toFixed(3), BS.vega(greek).toFixed(3)]
         return c
     }else{
-        var p = [ BS.pdelta(greek).toFixed(5), BS.gamma(greek).toFixed(5),
-                BS.ptheta(greek).toFixed(5), BS.prho(greek).toFixed(5), BS.vega(greek).toFixed(5)]
+        var p = [ BS.pdelta(greek).toFixed(3), BS.gamma(greek).toFixed(3),
+                BS.ptheta(greek).toFixed(3), BS.prho(greek).toFixed(4), BS.vega(greek).toFixed(3)]
         return p
     }
 }

@@ -1,15 +1,10 @@
 import React from "react";
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
 import { AutoSizer, Column, Table, WindowScroller} from 'react-virtualized';
-import Paper from '@material-ui/core/Paper';
 import 'react-virtualized/styles.css'
 import { Link } from "gatsby";
+import { connect } from 'react-redux';
 
 class OptionChain extends React.Component{
     constructor(props){
@@ -22,18 +17,17 @@ class OptionChain extends React.Component{
         this.cellRenderer = this.cellRenderer.bind(this)
         this.cellRendererFixed = this.cellRendererFixed.bind(this)
         this.impliedVolatility = this.impliedVolatility.bind(this)
-
     }
 
     headerRenderer(props){
         return(
-                <TableCell
-                    component="div"
-                    variant="head"
-                    key={props.dataKey}
-                >
-                    <span>{props.label}</span>
-                </TableCell>
+            <TableCell
+                component="div"
+                variant="head"
+                key={props.dataKey}
+            >
+                <span>{props.label}</span>
+            </TableCell>
         )
     }
 
@@ -87,7 +81,7 @@ class OptionChain extends React.Component{
                         <div className="otm"></div>
 
                     }
-                    <Link to={`/options/${this.props.quote.symbol}/${props.rowData.contractSymbol}`} >
+                    <Link to={`/options/${this.props.currTicker}/${props.rowData.contractSymbol}`} >
                         <p className="strike">{Number(props.cellData).toFixed(2)}</p>
                     </Link>
                 </Grid>
@@ -112,10 +106,14 @@ class OptionChain extends React.Component{
             <TableCell>{Number(props.cellData*100).toFixed(2)}%</TableCell>
         )
     }
-
     
     render(){
+        const columnWidth = 100
+        const changeColumn = 120
+        const greekColumn = 95
+        const minWidth = 70
         return(
+            <div id="table">
             <WindowScroller>
                 {({height, isScrolling, scrollTop}) => (
                 <AutoSizer >
@@ -138,7 +136,8 @@ class OptionChain extends React.Component{
                                 label="Strike"
                                 cellRenderer={this.inTheMoney}
                                 headerRenderer={this.headerRenderer}
-                                width={80}
+                                width={columnWidth}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="lastPrice"
@@ -146,7 +145,8 @@ class OptionChain extends React.Component{
                                 label="Last Price"
                                 cellRenderer={this.cellRendererFixed}
                                 headerRenderer={this.headerRenderer}
-                                width={80}
+                                width={columnWidth}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="bid"
@@ -154,7 +154,8 @@ class OptionChain extends React.Component{
                                 label="Bid"
                                 cellRenderer={this.cellRendererFixed}
                                 headerRenderer={this.headerRenderer}
-                                width={80}
+                                width={columnWidth}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="ask"
@@ -162,7 +163,8 @@ class OptionChain extends React.Component{
                                 label="Ask"
                                 cellRenderer={this.cellRendererFixed}
                                 headerRenderer={this.headerRenderer}
-                                width={80}
+                                width={columnWidth}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="delta"
@@ -170,7 +172,8 @@ class OptionChain extends React.Component{
                                 label="Delta"
                                 cellRenderer={this.cellRenderer}
                                 headerRenderer={this.headerRenderer}
-                                width={90}
+                                width={greekColumn}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="gamma"
@@ -178,7 +181,8 @@ class OptionChain extends React.Component{
                                 label="Gamma"
                                 cellRenderer={this.cellRenderer}
                                 headerRenderer={this.headerRenderer}
-                                width={90}
+                                width={greekColumn}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="theta"
@@ -186,7 +190,8 @@ class OptionChain extends React.Component{
                                 label="Theta"
                                 cellRenderer={this.cellRenderer}
                                 headerRenderer={this.headerRenderer}
-                                width={90}
+                                width={greekColumn}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="rho"
@@ -194,7 +199,8 @@ class OptionChain extends React.Component{
                                 label="Rho"
                                 cellRenderer={this.cellRenderer}
                                 headerRenderer={this.headerRenderer}
-                                width={90}
+                                width={greekColumn}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="vega"
@@ -202,7 +208,8 @@ class OptionChain extends React.Component{
                                 label="Vega"
                                 cellRenderer={this.cellRenderer}
                                 headerRenderer={this.headerRenderer}
-                                width={90}
+                                width={greekColumn}
+                                minWidth={minWidth}
                             />
                             <Column
                                 key="change"
@@ -210,7 +217,8 @@ class OptionChain extends React.Component{
                                 label="Change"
                                 cellRenderer={this.change}
                                 headerRenderer={this.headerRenderer}
-                                width={80}
+                                width={changeColumn}
+                                minWidth={minWidth}
                             />
                             <Column
                                 key="percentChange"
@@ -218,39 +226,50 @@ class OptionChain extends React.Component{
                                 label="%Change"
                                 cellRenderer={this.change}
                                 headerRenderer={this.headerRenderer}
-                                width={80}
+                                width={changeColumn}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="volume"
                                 dataKey="volume"
-                                label="Volume"
+                                label="Vol."
                                 cellRenderer={this.cellRenderer}
                                 headerRenderer={this.headerRenderer}
-                                width={80}
+                                width={columnWidth}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="openInterest"
                                 dataKey="openInterest"
-                                label="Open Interest"
+                                label="Open Int."
                                 cellRenderer={this.cellRenderer}
                                 headerRenderer={this.headerRenderer}
-                                width={80}
+                                width={columnWidth}
+                                minWidth={minWidth}
                             />
                             <Column 
                                 key="impliedVolatility"
                                 dataKey="impliedVolatility"
-                                label="Implied Volatility"
+                                label="Imp Vol."
                                 cellRenderer={this.impliedVolatility}
                                 headerRenderer={this.headerRenderer}
-                                width={80}
+                                width={changeColumn}
+                                minWidth={minWidth}
                             />
                         </Table>    
                         )}
                     </AutoSizer>
                 )}
             </WindowScroller>
+            </div>
         )
     }
 }
 
-export default OptionChain
+const mapStateToProps = (state, props) => {
+    return {
+        currTicker: state.app.currTicker
+    }
+}
+
+export default connect(mapStateToProps) (OptionChain);

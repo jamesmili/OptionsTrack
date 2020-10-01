@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useCallback } from 'react';
 import axios from "axios";
-import Select from '@material-ui/core/Select';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import { ToggleButton } from '@material-ui/lab';
-import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Header from '../components/Header';
-import OptionChain from '../components/OptionChain';
+import SwipeableViews from 'react-swipeable-views';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import greeks from '../greeks/greeks';
+import OptionTable from '../components/OptionTable';
+import { connect } from 'react-redux';
+import { calls, puts, exprDate, currTicker } from '../state/app';
+
 
 const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
@@ -19,11 +21,7 @@ class Option extends React.Component{
         this.state = {
             loading: true,
             quote: {},
-            calls: [],
-            puts: [],
-            expiration: [],
-            expirationDateEpoch: null,
-            expirationDate: "",
+            expirationDateEpoch: this.props.epoch,
             ticker: this.props.ticker,
             flag: true,
             marketStatus: "REGULAR",
@@ -32,13 +30,11 @@ class Option extends React.Component{
     }
 
     componentDidMount(){
-        this.updateData(this.state.expirationDateEpoch)
+        this.updateData(this.props.epoch)
         this.intervalID = setInterval(() => {
-            this.updateData(this.state.expirationDateEpoch)
+            this.updateData(this.props.epoch)
         },1000)
     }
-
-
     componentWillUnmount(){
         clearInterval(this.intervalID)
     }
@@ -64,22 +60,13 @@ class Option extends React.Component{
         }).then(response => {
             this.setState({
                 quote: response.data.optionChain.result[0].quote,
-                expiration: response.data.optionChain.result[0].expirationDates,
                 expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
                 marketStatus: response.data.optionChain.result[0].quote.marketState,
                 ticker: this.props.ticker,
             })
-            this.setState({
-                calls: response.data.optionChain.result[0].options[0].calls.map((op) => {
-                    var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
-                    op['delta'] = x[0]
-                    op['gamma'] = x[1]
-                    op['theta'] = x[2]
-                    op['rho'] = x[3]
-                    op['vega'] = x[4]
-                    return op
-                }),
-                puts: response.data.optionChain.result[0].options[0].puts.map((op) => {
+            this.props.currTicker(this.props.ticker)
+            this.props.calls(
+                response.data.optionChain.result[0].options[0].calls.map((op) => {
                     var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
                     op['delta'] = x[0]
                     op['gamma'] = x[1]
@@ -88,26 +75,24 @@ class Option extends React.Component{
                     op['vega'] = x[4]
                     return op
                 })
-            })
+            )
+            this.props.puts(response.data.optionChain.result[0].options[0].puts.map((op) => {
+                        var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
+                        op['delta'] = x[0]
+                        op['gamma'] = x[1]
+                        op['theta'] = x[2]
+                        op['rho'] = x[3]
+                        op['vega'] = x[4]
+                        return op
+                    })
+            )
+            this.props.exprDate(response.data.optionChain.result[0].expirationDates)
         }).catch(error =>{
             console.log(error)
         })
     }
 
     render(){
-        const handleChange = (event) => {
-            const epoch = event.target.value
-            this.updateData(epoch)
-            this.setState({
-                expirationDate: convertDate(epoch),
-                expirationDateEpoch: epoch
-            })
-        }
-        const convertDate = (epoch) => {
-            const date = new Date(epoch*1000)
-            const expr = month[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getFullYear()
-            return expr
-        }
         const regMarketPriceChange = () => {
             if (this.state.quote.regularMarketChange > 0){
                 return(
@@ -139,7 +124,6 @@ class Option extends React.Component{
                 )
             }
         }
-        const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
         return(
             <div id="body">
                 <Header/>
@@ -179,56 +163,24 @@ class Option extends React.Component{
                             </Grid>
                         </Grid>
                     </div>
-                    <div>
-                        <Divider id="divider"/>
-                        <div id="tableFunction">
-                            <FormControl variant="outlined" id="expr">
-                                <FormHelperText>Expiration</FormHelperText>
-                                <Select native onChange={handleChange}>
-                                    {
-                                        this.state.expiration.map(expirationDate => {
-                                            const expr = convertDate(expirationDate)
-                                            return(
-                                                <option key={expirationDate} value={expirationDate}>{expr}</option>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
-                            <div id="callsputs">
-                                <ToggleButton
-                                    value="color"
-                                    selected={this.state.flag}
-                                    onChange={() => {this.setState( {flag: true})}}
-                                >
-                                    Calls
-                                </ToggleButton>
-                                <ToggleButton
-                                    value="color"
-                                    selected={!this.state.flag}
-                                    onChange={() => {this.setState( {flag: false})}}
-                                >
-                                    Puts
-                                </ToggleButton>
-                            </div>
-                        </div>
-                        {
-                            this.state.flag?
-                            <OptionChain chain={this.state.calls} 
-                                         quote={this.state.quote}
-                                         date={this.state.expirationDateEpoch}
-                                         call={true}/> 
-                            :
-                            <OptionChain chain={this.state.puts}
-                                         quote={this.state.quote}
-                                         date={this.state.expirationDateEpoch}
-                                         call={false}/> 
-                        }
-                    </div>
+                    <OptionTable updateData={this.updateData}/>
                 </div>
             </div>
         )
     }
 }
 
-export default Option
+const mapStateToProps = (state, props) => {
+    return {
+        epoch: state.app.epoch
+    }
+}
+
+const mapActionsToProps = dispatch => ({
+    calls: (c) => dispatch(calls(c)),
+    puts: (p) => dispatch(puts(p)),
+    exprDate: (e) => dispatch(exprDate(e)),
+    currTicker: (q) => dispatch(currTicker(q))
+});
+
+export default connect(mapStateToProps, mapActionsToProps) (Option)

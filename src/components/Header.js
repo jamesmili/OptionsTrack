@@ -23,7 +23,7 @@ class Header extends React.Component{
         return(
             <AppBar position="static" id="header">
                 <Toolbar>
-                    <Link to="/options/TSLA" id="headerTitle">
+                    <Link to="/options/SPY" id="headerTitle">
                         <h3>Options Track</h3>
                     </Link>
                     <SearchBar

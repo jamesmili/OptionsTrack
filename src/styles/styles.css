@@ -115,8 +115,11 @@ html{
 .tableCell{
   padding: 90px;
 }
+.tableHeaderFont{
+  font-size: 1.7vh !important;
+}
 .tableFont{
-  font-size: 10px;
+  font-size: 2vh !important;
 }
 #appBar{
   background: inherit;

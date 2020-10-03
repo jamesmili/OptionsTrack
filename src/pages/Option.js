@@ -3,13 +3,13 @@ import axios from "axios";
 import Grid from '@material-ui/core/Grid';
 import Header from '../components/Header';
 import SwipeableViews from 'react-swipeable-views';
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import greeks from '../greeks/greeks';
 import OptionTable from '../components/OptionTable';
 import { connect } from 'react-redux';
-import { calls, puts, exprDate, currTicker } from '../state/app';
+import { calls, puts, exprDate, currTicker, quote } from '../state/app';
+import OpenInterest from '../components/OpenInterest';
 
 
 const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
@@ -25,6 +25,7 @@ class Option extends React.Component{
             ticker: this.props.ticker,
             flag: true,
             marketStatus: "REGULAR",
+            value: 0
         }
         this.updateData = this.updateData.bind(this);
     }
@@ -64,6 +65,7 @@ class Option extends React.Component{
                 marketStatus: response.data.optionChain.result[0].quote.marketState,
                 ticker: this.props.ticker,
             })
+            this.props.quote(this.state.quote)
             this.props.currTicker(this.props.ticker)
             this.props.calls(
                 response.data.optionChain.result[0].options[0].calls.map((op) => {
@@ -93,6 +95,9 @@ class Option extends React.Component{
     }
 
     render(){
+        const handleTabs = (event, newValue) => {
+            this.setState({ value: newValue })
+        }
         const regMarketPriceChange = () => {
             if (this.state.quote.regularMarketChange > 0){
                 return(
@@ -163,11 +168,33 @@ class Option extends React.Component{
                             </Grid>
                         </Grid>
                     </div>
-                    <OptionTable updateData={this.updateData}/>
+                    <div>
+                        <Tabs 
+                            value={this.state.value} 
+                            onChange={handleTabs}>
+                            <Tab label="Option Chain"/>
+                            <Tab label="Open Interest"/>
+                        </Tabs>
+                        <TabPanel value={this.state.value} index={0}>
+                            <OptionTable updateData={this.updateData}/>
+                        </TabPanel>
+                        <TabPanel value={this.state.value} index={1}>
+                            <OpenInterest updateData={this.updateData}/>
+                        </TabPanel>
+                    </div>
                 </div>
             </div>
         )
     }
+}
+
+function TabPanel(props){
+    const {children, value, index} = props
+    return(<div>
+        {
+            value === index && children
+        }
+    </div>)
 }
 
 const mapStateToProps = (state, props) => {
@@ -180,7 +207,8 @@ const mapActionsToProps = dispatch => ({
     calls: (c) => dispatch(calls(c)),
     puts: (p) => dispatch(puts(p)),
     exprDate: (e) => dispatch(exprDate(e)),
-    currTicker: (q) => dispatch(currTicker(q))
+    currTicker: (q) => dispatch(currTicker(q)),
+    quote: (q) => dispatch(quote(q))
 });
 
 export default connect(mapStateToProps, mapActionsToProps) (Option)

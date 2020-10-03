@@ -41,7 +41,7 @@ class OptionTable extends React.Component{
                         <Grid
                             container
                             direction="row"
-                            justify="space-evenly"
+                            justify="space-between"
                             alignItems="center"
                         >
                             <Grid item>
@@ -65,9 +65,9 @@ class OptionTable extends React.Component{
                         </Grid>
                     </Grid>
                     <Grid item>
-                        <FormControl variant="outlined" id="expr">
+                        <FormControl variant="outlined">
                             <FormHelperText>Expiration</FormHelperText>
-                            <Select native onChange={handleChange}>
+                            <Select native onChange={handleChange} value={this.props.epochVal}>
                                 {
                                     this.props.exprDate.map(expirationDate => {
                                         const expr = convertDate(expirationDate)
@@ -95,7 +95,8 @@ const mapStateToProps = (state, props) => {
     return {
         calls: state.app.calls,
         puts: state.app.puts,
-        exprDate: state.app.exprDate
+        exprDate: state.app.exprDate,
+        epochVal: state.app.epoch
     }
 }
 

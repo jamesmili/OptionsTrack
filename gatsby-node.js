@@ -15,6 +15,6 @@ exports.createPages = ({ graphql, actions }) => {
         exactPath: true,
         isPermanent: false,
         redirectInBrowser: true,
-        toPath: '/options/TSLA'
+        toPath: '/options/SPY'
     });
   }

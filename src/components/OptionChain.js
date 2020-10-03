@@ -25,6 +25,7 @@ class OptionChain extends React.Component{
                 component="div"
                 variant="head"
                 key={props.dataKey}
+                className="tableFont"
             >
                 <span>{props.label}</span>
             </TableCell>
@@ -38,15 +39,15 @@ class OptionChain extends React.Component{
         const c = Number(props.cellData).toFixed(2)
         if (c < 0){
             return(
-                <TableCell><div className="negative">{Number(c).toFixed(2)}</div></TableCell>
+                <TableCell className="tableFont"><div className="negative">{Number(c).toFixed(2)}</div></TableCell>
             )
         }else if (c > 0){
             return(
-                <TableCell><div className="positive">+{Number(c).toFixed(2)}</div></TableCell>
+                <TableCell className="tableFont"><div className="positive">+{Number(c).toFixed(2)}</div></TableCell>
             )
         }else{
             return(
-                <TableCell>-</TableCell>
+                <TableCell className="tableFont">-</TableCell>
             )
         }
     }
@@ -54,15 +55,15 @@ class OptionChain extends React.Component{
         const c = Number(props.cellData).toFixed(2)
         if (c < 0){
             return(
-                <TableCell><div className="negative">{Number(c).toFixed(2)}%</div></TableCell>
+                <TableCell className="tableFont"><div className="negative">{Number(c).toFixed(2)}%</div></TableCell>
             )
         }else if (c > 0){
             return(
-                <TableCell><div className="positive">+{Number(c).toFixed(2)}%</div></TableCell>
+                <TableCell className="tableFont"><div className="positive">+{Number(c).toFixed(2)}%</div></TableCell>
             )
         }else{
             return(
-                <TableCell>-</TableCell>
+                <TableCell className="tableFont">-</TableCell>
             )
         }
     }
@@ -82,7 +83,7 @@ class OptionChain extends React.Component{
 
                     }
                     <Link to={`/options/${this.props.currTicker}/${props.rowData.contractSymbol}`} >
-                        <p className="strike">{Number(props.cellData).toFixed(2)}</p>
+                        <p className="strike tableFont">{Number(props.cellData).toFixed(2)}</p>
                     </Link>
                 </Grid>
             </TableCell>
@@ -91,19 +92,19 @@ class OptionChain extends React.Component{
 
     cellRenderer(props){
         return(
-            <TableCell>{props.cellData}</TableCell>
+            <TableCell className="tableFont">{props.cellData}</TableCell>
         )
     }
 
     cellRendererFixed(props){
         return(
-            <TableCell>{Number(props.cellData).toFixed(2)}</TableCell>
+            <TableCell className="tableFont">{Number(props.cellData).toFixed(2)}</TableCell>
         )
     }
 
     impliedVolatility(props){
         return(
-            <TableCell>{Number(props.cellData*100).toFixed(2)}%</TableCell>
+            <TableCell className="tableFont">{Number(props.cellData*100).toFixed(2)}%</TableCell>
         )
     }
     
@@ -241,7 +242,7 @@ class OptionChain extends React.Component{
                             <Column 
                                 key="openInterest"
                                 dataKey="openInterest"
-                                label="Open Int."
+                                label="O.I."
                                 cellRenderer={this.cellRenderer}
                                 headerRenderer={this.headerRenderer}
                                 width={columnWidth}
@@ -250,7 +251,7 @@ class OptionChain extends React.Component{
                             <Column 
                                 key="impliedVolatility"
                                 dataKey="impliedVolatility"
-                                label="Imp Vol."
+                                label="I.V."
                                 cellRenderer={this.impliedVolatility}
                                 headerRenderer={this.headerRenderer}
                                 width={changeColumn}
@@ -268,7 +269,7 @@ class OptionChain extends React.Component{
 
 const mapStateToProps = (state, props) => {
     return {
-        currTicker: state.app.currTicker
+        currTicker: state.app.currTicker,
     }
 }
 

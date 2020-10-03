@@ -2,7 +2,9 @@ const initialState = {
     calls: [],
     puts: [],
     exprDate: [],
-    epoch: null
+    epoch: null,
+    chain: [],
+    callsPutsButton: true
 };
   
 export const calls = (c) => ({
@@ -28,6 +30,16 @@ export const epoch = (e) => ({
 export const currTicker = (t) => ({
     type: 'TICKER',
     currTicker: t
+})
+
+export const callsPutsButton = (b) => ({
+    type: 'CALLSPUTSBUTTON',
+    callsPuts: b
+})
+
+export const quote = (q) => ({
+    type: "QUOTE",
+    quote: q
 })
 
 export default (state = initialState, action) => {
@@ -56,6 +68,16 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 currTicker: action.currTicker
+            }
+        case 'CALLSPUTSBUTTON':
+            return{
+                ...state,
+                callsPuts: action.callsPuts
+            }
+        case 'QUOTE':
+            return{
+                ...state,
+                quote: action.quote
             }
         default:
             return {

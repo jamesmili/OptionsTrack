@@ -4,6 +4,8 @@ import axios from "axios";
 import { AreaChart, Area, CartesianGrid, Tooltip } from 'recharts';
 import ContractInfo from '../components/ContractInfo';
 import Grid from '@material-ui/core/Grid';
+import { navigate } from "gatsby"
+import { connect } from 'react-redux'
 
 const proxyURL = "https://cors-anywhere.herokuapp.com/";
 const endpointURL = "https://query1.finance.yahoo.com/v7/finance/chart/"
@@ -64,7 +66,7 @@ class Contract extends React.Component{
                 })
             })
         }).catch(error =>{
-            console.log(error)
+            navigate(`/400`)
         })
 
     }
@@ -106,7 +108,7 @@ class Contract extends React.Component{
                         justify="center"
                         alignItems="center">
                         <Grid item> 
-                            <h2>{this.state.symbol}</h2>
+                            <h2>{this.props.contract}</h2>
                             <h1>${this.state.price}</h1>
                             <h4>{this.state.date}</h4>
                             {chart}
@@ -122,4 +124,11 @@ class Contract extends React.Component{
     }
 }
 
-export default Contract
+const mapStateToProps = (state, props) => {
+    return {
+        data: state.app.contractInfo
+    }
+}
+
+
+export default connect(mapStateToProps) (Contract)

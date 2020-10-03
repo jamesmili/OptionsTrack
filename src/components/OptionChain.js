@@ -5,6 +5,8 @@ import { AutoSizer, Column, Table, WindowScroller} from 'react-virtualized';
 import 'react-virtualized/styles.css'
 import { Link } from "gatsby";
 import { connect } from 'react-redux';
+import { contractInfo } from '../state/app';
+import { navigate } from "gatsby"
 
 class OptionChain extends React.Component{
     constructor(props){
@@ -17,6 +19,7 @@ class OptionChain extends React.Component{
         this.cellRenderer = this.cellRenderer.bind(this)
         this.cellRendererFixed = this.cellRendererFixed.bind(this)
         this.impliedVolatility = this.impliedVolatility.bind(this)
+        this.handleClickLink = this.handleClickLink.bind(this)
     }
 
     headerRenderer(props){
@@ -67,6 +70,9 @@ class OptionChain extends React.Component{
             )
         }
     }
+    handleClickLink(data){
+        this.props.contractInfo(data)
+    }
     inTheMoney(props){
         return(
             <TableCell >
@@ -82,7 +88,7 @@ class OptionChain extends React.Component{
                         <div className="otm"></div>
 
                     }
-                    <Link to={`/options/${this.props.currTicker}/${props.rowData.contractSymbol}`} >
+                    <Link to={`/options/${this.props.currTicker}/${props.rowData.contractSymbol}`} onClick={this.handleClickLink(props.rowData)} >
                         <p className="strike tableFont">{Number(props.cellData).toFixed(2)}</p>
                     </Link>
                 </Grid>
@@ -273,4 +279,8 @@ const mapStateToProps = (state, props) => {
     }
 }
 
-export default connect(mapStateToProps) (OptionChain);
+const mapActionsToProps = dispatch => ({
+    contractInfo: (c) => dispatch(contractInfo(c))
+});
+
+export default connect(mapStateToProps, mapActionsToProps) (OptionChain);

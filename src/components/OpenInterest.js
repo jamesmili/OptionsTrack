@@ -25,14 +25,37 @@ class OpenInterest extends React.Component{
             const expr = month[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getFullYear()
             return expr
         }
+        const formatYAxis = (tickItem) => {
+            console.log(tickItem)
+            return (tickItem/1000).toString()+"K"
+        }
         const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
         return(
-                <div id="container">
+                <div className="tabs">
                     <Grid container
                         direction="row"
                         justify="space-between"
                         alignItems="center">
-                        <Grid item></Grid>
+                        <Grid item>
+                            <h7>Calls:</h7>
+                            <h2>{this.props.calls}</h2>
+                        </Grid>
+                        <Grid item>
+                            <h7>Puts:</h7>
+                            <h2>{this.props.puts}</h2>
+                        </Grid>
+                        <Grid item>
+                            <h7>Total:</h7>
+                            <h2>{this.props.calls + this.props.puts}</h2>
+                        </Grid>
+                        <Grid item>
+                            <h7>Calls/Puts Ratio:</h7>
+                            <h2>{Number((this.props.calls/this.props.puts).toFixed(2))}</h2>
+                        </Grid>
+                        <Grid item>
+                            <h7>Max-Pain Strike Price:</h7>
+                            <h2>{this.props.maxPainStrike}</h2>
+                        </Grid>
                         <Grid item>
                             <FormControl variant="outlined">
                                 <FormHelperText>Expiration</FormHelperText>
@@ -57,9 +80,16 @@ class OpenInterest extends React.Component{
                                 data={this.props.data}
                                 barGap={0}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="strike" />
-                                <YAxis yAxisId="left" orientation="left"/>
-                                <YAxis yAxisId="right" orientation="right"/>
+                                <XAxis dataKey="strike" height={60} label={{ 
+                                    value: "Strike Price", position: "insideBottom", dy: -10}}/>
+                                <YAxis yAxisId="left" orientation="left" tickFormatter={formatYAxis}  
+                                    label={{ 
+                                        value: "Open Interest", position: "insideLeft", angle: -90,
+                                    }}/>
+                                <YAxis yAxisId="right" orientation="right" width={90} tickFormatter={formatYAxis} 
+                                    label={{ 
+                                        value: "Value in USD", position: "insideRight", angle: -90, dy: -90
+                                    }}/>
                                 <Tooltip />
                                 <Legend layout="horizontal" verticalAlign="top" />
                                 <Bar yAxisId="left" dataKey="Puts" fill="#FF8B8B" />
@@ -77,6 +107,10 @@ const mapStateToProps = (state, props) => {
     var data1 = []
     var data2 = []
     var data = []
+    var c = 0
+    var p = 0
+    var maxPain = Infinity
+    var maxPainStrike = 0
     for (var i = 0; i < state.app.calls.length; i++){
         if (Math.abs(state.app.calls[i].strike-state.app.quote.regularMarketPrice) <= state.app.quote.regularMarketPrice*.05){
             data1.push({
@@ -86,7 +120,9 @@ const mapStateToProps = (state, props) => {
                 "cITM": state.app.calls[i].inTheMoney
             })
         }
+        c += state.app.calls[i].openInterest ? state.app.calls[i].openInterest : 0
     }
+
     for (var j = 0; j < state.app.puts.length; j++){
         if (Math.abs(state.app.puts[j].strike-state.app.quote.regularMarketPrice) <= state.app.quote.regularMarketPrice*.05){
             data2.push({
@@ -96,6 +132,7 @@ const mapStateToProps = (state, props) => {
                 "pITM": state.app.puts[j].inTheMoney
             })
         }
+        p += state.app.puts[j].openInterest ? state.app.puts[j].openInterest : 0
     }    
     for (var k = 0; k < data1.length; k++){
         var obj = data2.find(e => e.strike === data1[k].strike)
@@ -118,12 +155,18 @@ const mapStateToProps = (state, props) => {
         var puts = data[l].pITM ? diff * data[l].Puts * 100 : 0
         var calls = data[l].cITM ? diff * data[l].Calls * 100 : 0
         data[l]['Value'] = Number(puts.toFixed(2)) + Number(calls.toFixed(2))
+        if(data[l].Value < maxPain){
+            maxPainStrike = data[l].strike
+            maxPain = data[l].Value
+        }
     }
-    
     return {
         data: data,
         exprDate: state.app.exprDate,
-        epochVal: state.app.epoch
+        epochVal: state.app.epoch,
+        calls: c,
+        puts: p,
+        maxPainStrike: maxPainStrike
     }
 }
 

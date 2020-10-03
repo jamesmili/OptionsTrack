@@ -30,7 +30,7 @@ class OptionTable extends React.Component{
         }
         const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
         return(
-            <div>
+            <div className="tabs">
                 <Grid
                     container
                     direction="row"

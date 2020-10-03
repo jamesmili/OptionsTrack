@@ -5,6 +5,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
+import { navigate } from "gatsby"
 
 const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
@@ -52,7 +53,7 @@ class ContractInfo extends React.Component{
                 ]
             })
         }).catch(error =>{
-            console.log(error)
+            navigate(`/400`)
         })
     }
     render(){

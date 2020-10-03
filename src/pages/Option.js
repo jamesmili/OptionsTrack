@@ -9,6 +9,7 @@ import greeks from '../greeks/greeks';
 import OptionTable from '../components/OptionTable';
 import { connect } from 'react-redux';
 import { calls, puts, exprDate, currTicker, quote } from '../state/app';
+import { navigate } from "gatsby"
 import OpenInterest from '../components/OpenInterest';
 
 
@@ -90,7 +91,7 @@ class Option extends React.Component{
             )
             this.props.exprDate(response.data.optionChain.result[0].expirationDates)
         }).catch(error =>{
-            console.log(error)
+            navigate(`/400`)
         })
     }
 

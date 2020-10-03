@@ -42,6 +42,11 @@ export const quote = (q) => ({
     quote: q
 })
 
+export const contractInfo = (c) => ({
+    type: "CONTRACT_INFO",
+    contractInfo: c
+})
+
 export default (state = initialState, action) => {
     switch (action.type) {
         case 'CALLS':
@@ -78,6 +83,11 @@ export default (state = initialState, action) => {
             return{
                 ...state,
                 quote: action.quote
+            }
+        case 'CONTRACT_INFO':
+            return{
+                ...state,
+                contractInfo: action.contractInfo
             }
         default:
             return {

@@ -1,19 +1,13 @@
 import React from 'react';
-import Header from './Header';
 import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
-import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import { epoch } from '../state/app';
 import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Legend, Line, ResponsiveContainer} from 'recharts';
 
 class OpenInterest extends React.Component{
-    constructor(props){
-        super(props)
-    }
-
     render(){
         const handleChange = (event) => {
             const epoch = event.target.value
@@ -26,7 +20,6 @@ class OpenInterest extends React.Component{
             return expr
         }
         const formatYAxis = (tickItem) => {
-            console.log(tickItem)
             return (tickItem/1000).toString()+"K"
         }
         const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
@@ -34,27 +27,27 @@ class OpenInterest extends React.Component{
                 <div className="tabs">
                     <Grid container
                         direction="row"
-                        justify="space-between"
+                        justify="space-evenly"
                         alignItems="center">
                         <Grid item>
-                            <h7>Calls:</h7>
-                            <h2>{this.props.calls}</h2>
+                            <p>Calls:</p>
+                            <h3>{this.props.calls}</h3>
                         </Grid>
                         <Grid item>
-                            <h7>Puts:</h7>
-                            <h2>{this.props.puts}</h2>
+                            <p>Puts:</p>
+                            <h3>{this.props.puts}</h3>
                         </Grid>
                         <Grid item>
-                            <h7>Total:</h7>
-                            <h2>{this.props.calls + this.props.puts}</h2>
+                            <p>Total:</p>
+                            <h3>{this.props.calls + this.props.puts}</h3>
                         </Grid>
                         <Grid item>
-                            <h7>Calls/Puts Ratio:</h7>
-                            <h2>{Number((this.props.calls/this.props.puts).toFixed(2))}</h2>
+                            <p>Calls/Puts Ratio:</p>
+                            <h3>{Number((this.props.calls/this.props.puts).toFixed(2))}</h3>
                         </Grid>
                         <Grid item>
-                            <h7>Max-Pain Strike Price:</h7>
-                            <h2>{this.props.maxPainStrike}</h2>
+                            <p>Max-Pain Strike Price:</p>
+                            <h3>{this.props.maxPainStrike}</h3>
                         </Grid>
                         <Grid item>
                             <FormControl variant="outlined">

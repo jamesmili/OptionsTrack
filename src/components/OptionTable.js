@@ -6,17 +6,9 @@ import FormControl from '@material-ui/core/FormControl';
 import { ToggleButton } from '@material-ui/lab';
 import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
-import { epoch } from '../state/app';
+import { epoch, callsPuts } from '../state/app';
 
 class OptionTable extends React.Component{
-    constructor(props){
-        super(props); 
-        this.state={
-            flag: true,
-            exprDate: this.props.exprDate
-        }
-        
-    }
     render(){
         const handleChange = (event) => {
             const epoch = event.target.value
@@ -47,8 +39,10 @@ class OptionTable extends React.Component{
                             <Grid item>
                                 <ToggleButton
                                     value="color"
-                                    selected={this.state.flag}
-                                    onChange={() => {this.setState( {flag: true})}}
+                                    selected={this.props.flag}
+                                    onChange={() => {
+                                        this.props.callsPuts(true)
+                                    }}
                                 >
                                     Calls
                                 </ToggleButton>
@@ -56,8 +50,10 @@ class OptionTable extends React.Component{
                             <Grid item>
                                 <ToggleButton
                                     value="color"
-                                    selected={!this.state.flag}
-                                    onChange={() => {this.setState( {flag: false})}}
+                                    selected={!this.props.flag}
+                                    onChange={() => {
+                                        this.props.callsPuts(false)
+                                    }}
                                 >
                                     Puts
                                 </ToggleButton>
@@ -67,7 +63,7 @@ class OptionTable extends React.Component{
                     <Grid item>
                         <FormControl variant="outlined">
                             <FormHelperText>Expiration</FormHelperText>
-                            <Select native onChange={handleChange} value={this.props.epochVal}>
+                            <Select native onChange={handleChange} value={this.props.epochVal ? this.props.epochVal : this.props.exprDate[0]}>
                                 {
                                     this.props.exprDate.map(expirationDate => {
                                         const expr = convertDate(expirationDate)
@@ -81,7 +77,7 @@ class OptionTable extends React.Component{
                     </Grid>
                 </Grid>
                 {
-                    this.state.flag?
+                    this.props.flag?
                     <OptionChain chain={this.props.calls}/> 
                     :
                     <OptionChain chain={this.props.puts}/> 
@@ -92,16 +88,19 @@ class OptionTable extends React.Component{
 }
 
 const mapStateToProps = (state, props) => {
+    console.log(state)
     return {
         calls: state.app.calls,
         puts: state.app.puts,
         exprDate: state.app.exprDate,
-        epochVal: state.app.epoch
+        epochVal: state.app.epoch,
+        flag: state.app.callsPuts
     }
 }
 
 const mapActionsToProps = dispatch => ({
-    epoch: (e) => dispatch(epoch(e))
+    epoch: (e) => dispatch(epoch(e)),
+    callsPuts: (b) => dispatch(callsPuts(b))
 });
 
 export default connect(mapStateToProps, mapActionsToProps) (OptionTable);

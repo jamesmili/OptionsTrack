@@ -1,16 +1,21 @@
 import React from "react";
 import TableCell from '@material-ui/core/TableCell';
 import Grid from '@material-ui/core/Grid';
-import { AutoSizer, Column, Table, WindowScroller} from 'react-virtualized';
+import { AutoSizer, Column, Table, WindowScroller } from 'react-virtualized';
 import 'react-virtualized/styles.css'
 import { Link } from "gatsby";
 import { connect } from 'react-redux';
-import { contractInfo } from '../state/app';
-import { navigate } from "gatsby"
+import { contractInfo, order, orderBy } from '../state/app';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 class OptionChain extends React.Component{
     constructor(props){
         super(props)
+        this.state = {
+            order: 'asc',
+            orderBy: 'strike',
+            chain: props.chain
+        }
         this.change = this.change.bind(this)
         this.changePercentage = this.changePercentage.bind(this)
         this.inTheMoney = this.inTheMoney.bind(this)
@@ -20,6 +25,16 @@ class OptionChain extends React.Component{
         this.cellRendererFixed = this.cellRendererFixed.bind(this)
         this.impliedVolatility = this.impliedVolatility.bind(this)
         this.handleClickLink = this.handleClickLink.bind(this)
+        this.descendingComparator = this.descendingComparator.bind(this)
+        this.getComparator = this.getComparator.bind(this)
+        this.createSortHandler = this.createSortHandler.bind(this)
+        this.handleRequestSort = this.handleRequestSort.bind(this)
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState){
+        return{
+            chain: nextProps.chain,
+        }
     }
 
     headerRenderer(props){
@@ -29,14 +44,26 @@ class OptionChain extends React.Component{
                 variant="head"
                 key={props.dataKey}
                 className="tableFont"
-            >
-                <span>{props.label}</span>
+                sortDirection={this.state.orderBy === props.dataKey ? this.state.order : false}>
+                <TableSortLabel
+                active={this.state.orderBy === props.dataKey}
+                direction={this.state.orderBy === props.dataKey ? this.state.order : 'asc'}
+                onClick={this.createSortHandler(props.dataKey)}
+                >
+                {props.label}
+                </TableSortLabel>
             </TableCell>
         )
     }
 
     rowGetter({ index }){
-        return this.props.chain[index]
+        const table = this.state.chain.map((el, index) => [el, index]);
+        table.sort((a, b) => {
+          const order = this.getComparator(a[0], b[0]);
+          if (order !== 0) return order;
+          return a[1] - b[1];
+        });
+        return table.map((el) => el[0])[index];
     }
     change(props){
         const c = Number(props.cellData).toFixed(2)
@@ -114,6 +141,30 @@ class OptionChain extends React.Component{
         )
     }
     
+    descendingComparator(a, b) {
+        if (b[this.state.orderBy] < a[this.state.orderBy]) {
+          return -1;
+        }
+        if (b[this.state.orderBy] > a[this.state.orderBy]) {
+          return 1;
+        }
+        return 0;
+      }
+
+    getComparator(a,b) {
+        return this.state.order === 'desc'
+          ? this.descendingComparator(a, b)
+          : -this.descendingComparator(a, b);
+    }
+
+    createSortHandler = (property) => (event) => {
+        this.handleRequestSort(event, property);
+    };
+    handleRequestSort = (event, property) => {
+        const isAsc = this.state.orderBy === property && this.state.order === 'asc';
+        isAsc ? this.setState({order: 'desc'}) : this.setState({order: 'asc'});
+        this.setState({orderBy: property});
+    };
     render(){
         const columnWidth = 100
         const changeColumn = 120
@@ -274,13 +325,18 @@ class OptionChain extends React.Component{
 }
 
 const mapStateToProps = (state, props) => {
+    console.log(state)
     return {
         currTicker: state.app.currTicker,
+        order: state.app.order,
+        orderBy: state.app.orderBy
     }
 }
 
 const mapActionsToProps = dispatch => ({
-    contractInfo: (c) => dispatch(contractInfo(c))
+    contractInfo: (c) => dispatch(contractInfo(c)),
+    order: (o) => dispatch(order(o)),
+    orderBy: (ob) => dispatch(orderBy(ob))
 });
 
 export default connect(mapStateToProps, mapActionsToProps) (OptionChain);

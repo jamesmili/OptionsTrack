@@ -1,8 +1,7 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import axios from "axios";
 import Grid from '@material-ui/core/Grid';
 import Header from '../components/Header';
-import SwipeableViews from 'react-swipeable-views';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import greeks from '../greeks/greeks';
@@ -91,6 +90,7 @@ class Option extends React.Component{
             )
             this.props.exprDate(response.data.optionChain.result[0].expirationDates)
         }).catch(error =>{
+            console.log(error)
             navigate(`/400`)
         })
     }

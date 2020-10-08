@@ -4,7 +4,9 @@ const initialState = {
     exprDate: [],
     epoch: null,
     chain: [],
-    callsPutsButton: true
+    callsPuts: true,
+    order: 'asc',
+    orderBy: 'strike'
 };
   
 export const calls = (c) => ({
@@ -32,7 +34,7 @@ export const currTicker = (t) => ({
     currTicker: t
 })
 
-export const callsPutsButton = (b) => ({
+export const callsPuts = (b) => ({
     type: 'CALLSPUTSBUTTON',
     callsPuts: b
 })
@@ -45,6 +47,16 @@ export const quote = (q) => ({
 export const contractInfo = (c) => ({
     type: "CONTRACT_INFO",
     contractInfo: c
+})
+
+export const order = (o) => ({
+    type: "ORDER",
+    order: o
+})
+
+export const orderBy = (ob) => ({
+    type: "ORDERBY",
+    orderBy: ob
 })
 
 export default (state = initialState, action) => {
@@ -88,6 +100,16 @@ export default (state = initialState, action) => {
             return{
                 ...state,
                 contractInfo: action.contractInfo
+            }
+        case 'ORDER':
+            return{
+                ...state,
+                order: action.order
+            }
+        case 'ORDERBY':
+            return{
+                ...state,
+                orderBy: action.orderBy
             }
         default:
             return {

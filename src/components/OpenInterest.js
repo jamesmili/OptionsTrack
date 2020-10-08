@@ -27,7 +27,7 @@ class OpenInterest extends React.Component{
                 <div className="tabs">
                     <Grid container
                         direction="row"
-                        justify="space-evenly"
+                        justify="space-between"
                         alignItems="center">
                         <Grid item>
                             <p>Calls:</p>

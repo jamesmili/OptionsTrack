@@ -12,8 +12,6 @@ class OptionChain extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            order: 'asc',
-            orderBy: 'strike',
             chain: props.chain
         }
         this.change = this.change.bind(this)
@@ -44,10 +42,10 @@ class OptionChain extends React.Component{
                 variant="head"
                 key={props.dataKey}
                 className="tableFont"
-                sortDirection={this.state.orderBy === props.dataKey ? this.state.order : false}>
+                sortDirection={this.props.dataKey === props.dataKey ? this.props.ascDesc : false}>
                 <TableSortLabel
-                active={this.state.orderBy === props.dataKey}
-                direction={this.state.orderBy === props.dataKey ? this.state.order : 'asc'}
+                active={this.props.dataKey === props.dataKey}
+                direction={this.props.dataKey === props.dataKey ? this.props.ascDesc : 'asc'}
                 onClick={this.createSortHandler(props.dataKey)}
                 >
                 {props.label}
@@ -142,17 +140,17 @@ class OptionChain extends React.Component{
     }
     
     descendingComparator(a, b) {
-        if (b[this.state.orderBy] < a[this.state.orderBy]) {
+        if (b[this.props.dataKey] < a[this.props.dataKey]) {
           return -1;
         }
-        if (b[this.state.orderBy] > a[this.state.orderBy]) {
+        if (b[this.props.dataKey] > a[this.props.dataKey]) {
           return 1;
         }
         return 0;
       }
 
     getComparator(a,b) {
-        return this.state.order === 'desc'
+        return this.props.ascDesc === 'desc'
           ? this.descendingComparator(a, b)
           : -this.descendingComparator(a, b);
     }
@@ -161,9 +159,9 @@ class OptionChain extends React.Component{
         this.handleRequestSort(event, property);
     };
     handleRequestSort = (event, property) => {
-        const isAsc = this.state.orderBy === property && this.state.order === 'asc';
-        isAsc ? this.setState({order: 'desc'}) : this.setState({order: 'asc'});
-        this.setState({orderBy: property});
+        const isAsc = this.props.dataKey === property && this.props.ascDesc === 'asc';
+        isAsc ? this.props.order('desc')  : this.props.order('asc') ;
+        this.props.orderBy(property);
     };
     render(){
         const columnWidth = 100
@@ -328,8 +326,8 @@ const mapStateToProps = (state, props) => {
     console.log(state)
     return {
         currTicker: state.app.currTicker,
-        order: state.app.order,
-        orderBy: state.app.orderBy
+        ascDesc: state.app.order,
+        dataKey: state.app.orderBy
     }
 }
 

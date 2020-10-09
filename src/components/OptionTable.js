@@ -3,7 +3,8 @@ import OptionChain from '../components/OptionChain';
 import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
-import { ToggleButton } from '@material-ui/lab';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import { epoch, callsPuts } from '../state/app';
@@ -20,6 +21,9 @@ class OptionTable extends React.Component{
             const expr = month[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getFullYear()
             return expr
         }
+        const handleButton = (event, flag) => {
+            this.props.callsPuts(flag)
+        }
         const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
         return(
             <div className="tabs">
@@ -30,35 +34,18 @@ class OptionTable extends React.Component{
                     alignItems="center"
                 >                    
                     <Grid item>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="space-between"
-                            alignItems="center"
-                        >
-                            <Grid item>
-                                <ToggleButton
-                                    value="color"
-                                    selected={this.props.flag}
-                                    onChange={() => {
-                                        this.props.callsPuts(true)
-                                    }}
-                                >
-                                    Calls
-                                </ToggleButton>
-                            </Grid>
-                            <Grid item>
-                                <ToggleButton
-                                    value="color"
-                                    selected={!this.props.flag}
-                                    onChange={() => {
-                                        this.props.callsPuts(false)
-                                    }}
-                                >
-                                    Puts
-                                </ToggleButton>
-                            </Grid>
-                        </Grid>
+                        <ToggleButtonGroup
+                            size="medium"
+                            value={this.props.flag}
+                            exclusive
+                            onChange={handleButton}>
+                            <ToggleButton value={true}>
+                                Calls
+                            </ToggleButton>
+                            <ToggleButton value={false}>
+                                Puts
+                            </ToggleButton>
+                        </ToggleButtonGroup>
                     </Grid>
                     <Grid item>
                         <FormControl variant="outlined">

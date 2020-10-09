@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 html{
-  font-family: 'Lato';
+  font-family: 'Ubuntu', sans-serif !important;
 }
 .positive{
   background-color: #84FFA0;
@@ -60,6 +60,13 @@ html{
   margin-left: 25px;
   margin-right: 25px;
   margin-top: 50px;
+}
+
+#loadingContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20%;
 }
 
 #table{

@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { calls, puts, exprDate, currTicker, quote } from '../state/app';
 import { navigate } from "gatsby"
 import OpenInterest from '../components/OpenInterest';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
@@ -89,6 +89,7 @@ class Option extends React.Component{
                     })
             )
             this.props.exprDate(response.data.optionChain.result[0].expirationDates)
+            this.setState({ loading: false })
         }).catch(error =>{
             console.log(error)
             navigate(`/400`)
@@ -134,55 +135,64 @@ class Option extends React.Component{
             <div id="body">
                 <Header/>
                 <div id="container">
-                    <div>
-                        <Grid container>
-                            <Grid container spacing={1}>
-                                <Grid item>
-                                    <p className="ticker">{this.state.quote.longName}</p>
+                    {
+                        this.state.loading ? 
+                        <div id="loadingContainer">
+                            <CircularProgress id="loading"/> 
+                        </div>
+                        :
+                        <div>
+                            <div>
+                                <Grid container>
+                                    <Grid container spacing={1}>
+                                        <Grid item>
+                                            <p className="ticker">{this.state.quote.longName}</p>
+                                        </Grid>
+                                        <Grid item>
+                                            <p className="ticker">({this.state.quote.symbol})</p>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={1}>
+                                        <Grid item>
+                                            <p id="exchange">{this.state.quote.quoteSourceName}.</p>
+                                        </Grid>
+                                        <Grid item>
+                                            <p id="currency">Currency in {this.state.quote.currency}.</p>
+                                        </Grid>                  
+                                    </Grid>
                                 </Grid>
-                                <Grid item>
-                                    <p className="ticker">({this.state.quote.symbol})</p>
+                                <Grid container 
+                                    direction="row"
+                                    justify="flex-start"
+                                    alignItems="flex-start"
+                                    spacing={1}>
+                                    <Grid item>
+                                        <p id="price">{Number(this.state.quote.regularMarketPrice).toFixed(2)}</p>
+                                    </Grid>
+                                    <Grid item>
+                                        {regMarketPriceChange()}
+                                    </Grid>
+                                    <Grid item>
+                                        {regMarketPriceChangePer()}
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                            <Grid container spacing={1}>
-                                <Grid item>
-                                    <p id="exchange">{this.state.quote.quoteSourceName}.</p>
-                                </Grid>
-                                <Grid item>
-                                    <p id="currency">Currency in {this.state.quote.currency}.</p>
-                                </Grid>                  
-                            </Grid>
-                        </Grid>
-                        <Grid container 
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-start"
-                            spacing={1}>
-                            <Grid item>
-                                <p id="price">{Number(this.state.quote.regularMarketPrice).toFixed(2)}</p>
-                            </Grid>
-                            <Grid item>
-                                {regMarketPriceChange()}
-                            </Grid>
-                            <Grid item>
-                                {regMarketPriceChangePer()}
-                            </Grid>
-                        </Grid>
-                    </div>
-                    <div>
-                        <Tabs 
-                            value={this.state.value} 
-                            onChange={handleTabs}>
-                            <Tab label="Option Chain"/>
-                            <Tab label="Open Interest"/>
-                        </Tabs>
-                        <TabPanel value={this.state.value} index={0}>
-                            <OptionTable updateData={this.updateData}/>
-                        </TabPanel>
-                        <TabPanel value={this.state.value} index={1}>
-                            <OpenInterest updateData={this.updateData}/>
-                        </TabPanel>
-                    </div>
+                            </div>
+                            <div>
+                                <Tabs 
+                                    value={this.state.value} 
+                                    onChange={handleTabs}>
+                                    <Tab label="Option Chain"/>
+                                    <Tab label="Open Interest"/>
+                                </Tabs>
+                                <TabPanel value={this.state.value} index={0}>
+                                    <OptionTable updateData={this.updateData}/>
+                                </TabPanel>
+                                <TabPanel value={this.state.value} index={1}>
+                                    <OpenInterest updateData={this.updateData}/>
+                                </TabPanel>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         )

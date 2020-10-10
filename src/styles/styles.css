@@ -146,6 +146,14 @@ html{
 .overviewText{
   text-align: justify;
 }
+.quoteInfoHeader{
+  font-size: 11px;
+  margin-bottom: 0px
+}
+.quoteInfo{
+  font-size: 15px;
+  margin-top: 5px;
+}
 #graph{
   padding: 10px;
 }

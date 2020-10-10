@@ -67,11 +67,11 @@ class OptionChain extends React.Component{
         const c = Number(props.cellData).toFixed(2)
         if (c < 0){
             return(
-                <TableCell className="tableFont"><div className="negative">{Number(c).toFixed(2)}</div></TableCell>
+                <TableCell className="tableFont"><div className="negative">{c}</div></TableCell>
             )
         }else if (c > 0){
             return(
-                <TableCell className="tableFont"><div className="positive">+{Number(c).toFixed(2)}</div></TableCell>
+                <TableCell className="tableFont"><div className="positive">+{c}</div></TableCell>
             )
         }else{
             return(
@@ -83,11 +83,11 @@ class OptionChain extends React.Component{
         const c = Number(props.cellData).toFixed(2)
         if (c < 0){
             return(
-                <TableCell className="tableFont"><div className="negative">{Number(c).toFixed(2)}%</div></TableCell>
+                <TableCell className="tableFont"><div className="negative">{c}%</div></TableCell>
             )
         }else if (c > 0){
             return(
-                <TableCell className="tableFont"><div className="positive">+{Number(c).toFixed(2)}%</div></TableCell>
+                <TableCell className="tableFont"><div className="positive">+{c}%</div></TableCell>
             )
         }else{
             return(

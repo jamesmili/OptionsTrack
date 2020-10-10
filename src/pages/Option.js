@@ -11,6 +11,7 @@ import { calls, puts, exprDate, currTicker, quote } from '../state/app';
 import { navigate } from "gatsby"
 import OpenInterest from '../components/OpenInterest';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Divider from '@material-ui/core/Divider';
 
 const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
 const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
@@ -138,19 +139,14 @@ class Option extends React.Component{
                     {
                         this.state.loading ? 
                         <div id="loadingContainer">
-                            <CircularProgress id="loading"/> 
+                            <CircularProgress color='inherit'/> 
                         </div>
                         :
                         <div>
                             <div>
                                 <Grid container>
-                                    <Grid container spacing={1}>
-                                        <Grid item>
-                                            <p className="ticker">{this.state.quote.longName}</p>
-                                        </Grid>
-                                        <Grid item>
-                                            <p className="ticker">({this.state.quote.symbol})</p>
-                                        </Grid>
+                                    <Grid item>
+                                        <p className="ticker">{this.state.quote.longName} ({this.state.quote.symbol})</p>
                                     </Grid>
                                     <Grid container spacing={1}>
                                         <Grid item>
@@ -176,7 +172,22 @@ class Option extends React.Component{
                                         {regMarketPriceChangePer()}
                                     </Grid>
                                 </Grid>
+                                <Grid container spacing={3}>
+                                    <Grid item>
+                                        <p className="quoteInfoHeader">High:</p>
+                                        <p className="quoteInfo">{Number(this.state.quote.regularMarketDayHigh).toFixed(2)}</p>
+                                    </Grid>
+                                    <Grid item>
+                                        <p className="quoteInfoHeader">Low:</p>
+                                        <p className="quoteInfo">{Number(this.state.quote.regularMarketDayLow).toFixed(2)}</p>
+                                    </Grid>
+                                    <Grid item>
+                                        <p className="quoteInfoHeader">Vol:</p>
+                                        <p className="quoteInfo">{this.state.quote.regularMarketVolume}</p>
+                                    </Grid>
+                                </Grid>
                             </div>
+                            <Divider/>
                             <div>
                                 <Tabs 
                                     value={this.state.value} 

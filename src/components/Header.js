@@ -24,7 +24,7 @@ class Header extends React.Component{
             <AppBar position="static" id="header">
                 <Toolbar>
                     <Link to="/options/SPY" id="headerTitle">
-                        <h3>Options Track</h3>
+                        <h3>OptionsTrack</h3>
                     </Link>
                     <SearchBar
                         onChange={(e) => onChange(e)}

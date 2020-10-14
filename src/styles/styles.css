@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 html{
   font-family: 'Ubuntu', sans-serif !important;
+  background-color: #FFFFFF;
 }
 .positive{
   background-color: #84FFA0;
@@ -81,7 +82,9 @@ html{
 #puts{
   background-color: #FFA296;
 }
-
+#chart{
+  width: 75%;
+}
 #divider{
   margin-bottom: 10px;
   margin-top: 10px;
@@ -113,7 +116,7 @@ html{
   top: 0;
   left: 0;
   right: 0;
-  background-color: #FAF9F9;
+  background-color: #FFFFFF;
 }
 .tabs{
   margin-top: 15px;
@@ -179,5 +182,8 @@ html{
   }
   #tableFunction{
     margin-bottom: 10px;
+  }
+  #chart{
+    width: 100%;
   }
 }

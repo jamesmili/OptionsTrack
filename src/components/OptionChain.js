@@ -323,7 +323,6 @@ class OptionChain extends React.Component{
 }
 
 const mapStateToProps = (state, props) => {
-    console.log(state)
     return {
         currTicker: state.app.currTicker,
         ascDesc: state.app.order,

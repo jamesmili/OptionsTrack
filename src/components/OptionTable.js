@@ -75,7 +75,6 @@ class OptionTable extends React.Component{
 }
 
 const mapStateToProps = (state, props) => {
-    console.log(state)
     return {
         calls: state.app.calls,
         puts: state.app.puts,

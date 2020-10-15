@@ -5,7 +5,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import '../styles/styles.css'
 
-
 class Header extends React.Component{
     constructor(props){
         super(props)

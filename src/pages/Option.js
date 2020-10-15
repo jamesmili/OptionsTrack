@@ -12,9 +12,7 @@ import { navigate } from "gatsby"
 import OpenInterest from '../components/OpenInterest';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
-
-const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
-const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
+import { proxyURL, quoteURL } from '../constants/const'
 
 class Option extends React.Component{
     constructor(props){
@@ -51,9 +49,8 @@ class Option extends React.Component{
     }
 
     updateData(epoch){
-        console.log("update")
         const e = epoch ? "?date=" + epoch : ""
-        axios.get(proxyURL + endpointURL + this.props.ticker + e, {
+        axios.get(proxyURL + quoteURL + this.props.ticker + e, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',

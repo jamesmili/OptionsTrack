@@ -8,9 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
 import { navigate } from "gatsby"
 import greeks from '../greeks/greeks';
-
-const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
-const endpointURL = "https://query2.finance.yahoo.com/v7/finance/options/"
+import { proxyURL, quoteURL } from '../constants/const'
 
 class ContractInfo extends React.Component{
     constructor(props){
@@ -34,7 +32,7 @@ class ContractInfo extends React.Component{
         }
     }
     componentDidMount(){
-        axios.get(proxyURL + endpointURL + this.props.contract, {
+        axios.get(proxyURL + quoteURL + this.props.contract, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',
@@ -63,7 +61,7 @@ class ContractInfo extends React.Component{
         }).catch(error =>{
             navigate(`/400`)
         })
-        axios.get(proxyURL + endpointURL + this.props.ticker, {
+        axios.get(proxyURL + quoteURL + this.props.ticker, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',

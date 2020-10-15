@@ -8,6 +8,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import { epoch, callsPuts } from '../state/app';
+import { month } from '../constants/const'
 
 class OptionTable extends React.Component{
     render(){
@@ -24,7 +25,6 @@ class OptionTable extends React.Component{
         const handleButton = (event, flag) => {
             this.props.callsPuts(flag)
         }
-        const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
         return(
             <div className="tabs">
                 <Grid

@@ -8,10 +8,7 @@ import { connect } from 'react-redux'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-const proxyURL = "https://nameless-mesa-82672.herokuapp.com/";
-const endpointURL = "https://query1.finance.yahoo.com/v7/finance/chart/"
-const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
+import { proxyURL, chartURL, month } from '../constants/const';
 
 class Contract extends React.Component{
     constructor(props){
@@ -42,7 +39,7 @@ class Contract extends React.Component{
     }
 
     getData(period, interval){
-        axios.get(proxyURL + endpointURL + this.props.contract + "?period1=" + period + "&period2=9999999999&interval=" + interval, {
+        axios.get(proxyURL + chartURL + this.props.contract + "?period1=" + period + "&period2=9999999999&interval=" + interval, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',

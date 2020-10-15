@@ -6,6 +6,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { connect } from 'react-redux';
 import { epoch } from '../state/app';
 import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Legend, Line, ResponsiveContainer} from 'recharts';
+import { month } from '../constants/const'
 
 class OpenInterest extends React.Component{
     render(){
@@ -22,7 +23,6 @@ class OpenInterest extends React.Component{
         const formatYAxis = (tickItem) => {
             return (tickItem/1000).toString()+"K"
         }
-        const month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
         return(
                 <div className="tabs">
                     <Grid container

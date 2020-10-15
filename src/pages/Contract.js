@@ -39,6 +39,7 @@ class Contract extends React.Component{
     }
 
     getData(period, interval){
+        console.log(chartURL + this.props.contract + "?period1=" + period + "&period2=9999999999&interval=" + interval)
         axios.get(proxyURL + chartURL + this.props.contract + "?period1=" + period + "&period2=9999999999&interval=" + interval, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -127,26 +128,27 @@ class Contract extends React.Component{
                     interval = "15m"
                     break;
                 case "1m":
-                    period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*5*31
+                    period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*31
                     interval = "1h"
                     break;
                 case "6m":
-                    period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*5*6
+                    period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*183
                     interval = "1d"
                     break;
                 case "1y":
-                    period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*5*12
-                    interval = "5d"
+                    period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*365
+                    interval = "1d"
                     break;
                 case "Max":
                     period = 0
-                    interval = "1wk"
+                    interval = "1d"
                     break;
                 default:
                     period = new Date().setHours(0,0,0,0)/1000
                     interval = "2m"
                     break;
             }
+            console.log(period)
             this.setState({
                 toggle: flag,
             })

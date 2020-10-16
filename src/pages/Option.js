@@ -129,6 +129,11 @@ class Option extends React.Component{
                 )
             }
         }
+        const styles = theme => ({
+            indicator: {
+              backgroundColor: '#444444',
+            },
+          })
         return(
             <div id="body">
                 <Header/>
@@ -139,7 +144,7 @@ class Option extends React.Component{
                             <CircularProgress color='inherit'/> 
                         </div>
                         :
-                        <div>
+                        <div id="content">
                             <div>
                                 <Grid container>
                                     <Grid item>
@@ -218,7 +223,8 @@ function TabPanel(props){
 
 const mapStateToProps = (state, props) => {
     return {
-        epoch: state.app.epoch
+        epoch: state.app.epoch,
+        dark: state.app.dark
     }
 }
 

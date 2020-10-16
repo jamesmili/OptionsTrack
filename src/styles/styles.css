@@ -1,19 +1,18 @@
-@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 html{
-  font-family: 'Ubuntu', sans-serif !important;
-  background-color: #FFFFFF;
+  font-family: 'Lato', sans-serif;
 }
 .positive{
   background-color: #84FFA0;
-  text-align: center;
   padding-left: 10px;
   padding-right: 10px;
+  width: 100%;
 }
 .negative{
   background-color: #FFA296;
-  text-align: center;
   padding-left: 10px;
   padding-right: 10px;
+  width: 100%;
 }
 .gain{
   color: #00CB00;
@@ -44,6 +43,10 @@ html{
 }
 .wrapper{
   margin: 0 auto
+}
+#content{
+  margin: auto;
+  width: 90%;
 }
 
 #expr{
@@ -132,7 +135,7 @@ html{
   text-overflow: ellipsis
 }
 .tableFont{
-  font-size: 15px;
+  font-size: 14px;
   text-overflow: ellipsis;
 }
 #appBar{
@@ -185,5 +188,28 @@ html{
   }
   #chart{
     width: 100%;
+  }
+}
+
+@media only screen and (max-width: 1400px){
+  #content{
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1900px){
+  html{
+    font-size: 0.5vw;
+  }
+  #content{
+    width: 75%;
+  }
+  .tableHeaderFont{
+    font-size: 0.5vw;
+    text-overflow: ellipsis
+  }
+  .tableFont{
+    font-size: 0.6vw;
+    text-overflow: ellipsis;
   }
 }

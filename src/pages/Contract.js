@@ -164,54 +164,56 @@ class Contract extends React.Component{
                         <CircularProgress color='inherit'/> 
                     </div>
                     :
-                    <Grid container
-                        direction="column"
-                        justify="center"
-                        alignItems="center">
-                        <Grid item id="chart"> 
-                            <Grid container
-                                direction="row"
-                                justify="space-between"
-                                alignItems="flex-end">
-                                <Grid item>
-                                    <h2>{this.props.contract}</h2>
-                                    <h1>${this.state.price}</h1>
-                                    <h4>{this.state.date}</h4>
+                    <div id="content">
+                        <Grid container
+                            direction="column"
+                            justify="center"
+                            alignItems="flex-start">
+                            <Grid item id="chart"> 
+                                <Grid container
+                                    direction="row"
+                                    justify="space-between"
+                                    alignItems="center">
+                                    <Grid item>
+                                        <h2>{this.props.contract}</h2>
+                                        <h1>${this.state.price}</h1>
+                                        <h4>{this.state.date}</h4>
+                                    </Grid>
+                                    <Grid item>
+                                        <ToggleButtonGroup
+                                        size="medium"
+                                        value={this.state.toggle}
+                                        exclusive
+                                        onChange={handleButton}>
+                                            <ToggleButton value="1d">
+                                                1d
+                                            </ToggleButton>
+                                            <ToggleButton value="5d">
+                                                5d
+                                            </ToggleButton>
+                                            <ToggleButton value="1m">
+                                                1m
+                                            </ToggleButton>
+                                            <ToggleButton value="6m">
+                                                6m
+                                            </ToggleButton>
+                                            <ToggleButton value="1y">
+                                                1y
+                                            </ToggleButton>
+                                            <ToggleButton value="Max">
+                                                Max
+                                            </ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </Grid>
                                 </Grid>
-                                <Grid item>
-                                    <ToggleButtonGroup
-                                    size="medium"
-                                    value={this.state.toggle}
-                                    exclusive
-                                    onChange={handleButton}>
-                                        <ToggleButton value="1d">
-                                            1d
-                                        </ToggleButton>
-                                        <ToggleButton value="5d">
-                                            5d
-                                        </ToggleButton>
-                                        <ToggleButton value="1m">
-                                            1m
-                                        </ToggleButton>
-                                        <ToggleButton value="6m">
-                                            6m
-                                        </ToggleButton>
-                                        <ToggleButton value="1y">
-                                            1y
-                                        </ToggleButton>
-                                        <ToggleButton value="Max">
-                                            Max
-                                        </ToggleButton>
-                                    </ToggleButtonGroup>
-                                </Grid>
+                                {chart}
                             </Grid>
-                            {chart}
+                            <Grid item>
+                                <ContractInfo ticker={this.props.ticker}
+                                            contract={this.props.contract}/>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <ContractInfo ticker={this.props.ticker}
-                                          contract={this.props.contract}/>
-                        </Grid>
-                    </Grid>
+                    </div>
                 }
                 </div>
             </div>

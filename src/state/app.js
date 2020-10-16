@@ -6,7 +6,8 @@ const initialState = {
     chain: [],
     callsPuts: true,
     order: 'asc',
-    orderBy: 'strike'
+    orderBy: 'strike',
+    dark: false
 };
   
 export const calls = (c) => ({
@@ -57,6 +58,11 @@ export const order = (o) => ({
 export const orderBy = (ob) => ({
     type: "ORDERBY",
     orderBy: ob
+})
+
+export const darkMode = (d) => ({
+    type: "DARKMODE",
+    dark: d
 })
 
 export default (state = initialState, action) => {
@@ -110,6 +116,11 @@ export default (state = initialState, action) => {
             return{
                 ...state,
                 orderBy: action.orderBy
+            }
+        case 'DARKMODE':
+            return{
+                ...state,
+                dark: action.dark
             }
         default:
             return {

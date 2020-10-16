@@ -41,14 +41,13 @@ class OptionChain extends React.Component{
                 component="div"
                 variant="head"
                 key={props.dataKey}
-                className="tableFont"
                 sortDirection={this.props.dataKey === props.dataKey ? this.props.ascDesc : false}>
                 <TableSortLabel
-                active={this.props.dataKey === props.dataKey}
-                direction={this.props.dataKey === props.dataKey ? this.props.ascDesc : 'asc'}
-                onClick={this.createSortHandler(props.dataKey)}
+                    active={this.props.dataKey === props.dataKey}
+                    direction={this.props.dataKey === props.dataKey ? this.props.ascDesc : 'asc'}
+                    onClick={this.createSortHandler(props.dataKey)}
                 >
-                {props.label}
+                    <p className="tableHeaderFont">{props.label}</p>
                 </TableSortLabel>
             </TableCell>
         )
@@ -67,15 +66,15 @@ class OptionChain extends React.Component{
         const c = Number(props.cellData).toFixed(2)
         if (c < 0){
             return(
-                <TableCell className="tableFont"><div className="negative">{c}</div></TableCell>
+                <TableCell><div className="negative"><p className="tableFont">{c}</p></div></TableCell>
             )
         }else if (c > 0){
             return(
-                <TableCell className="tableFont"><div className="positive">+{c}</div></TableCell>
+                <TableCell><div className="positive"><p className="tableFont">+{c}</p></div></TableCell>
             )
         }else{
             return(
-                <TableCell className="tableFont">-</TableCell>
+                <TableCell><p className="tableFont">-</p></TableCell>
             )
         }
     }
@@ -83,15 +82,15 @@ class OptionChain extends React.Component{
         const c = Number(props.cellData).toFixed(2)
         if (c < 0){
             return(
-                <TableCell className="tableFont"><div className="negative">{c}%</div></TableCell>
+                <TableCell><div className="negative"><p className="tableFont">{c}%</p></div></TableCell>
             )
         }else if (c > 0){
             return(
-                <TableCell className="tableFont"><div className="positive">+{c}%</div></TableCell>
+                <TableCell><div className="positive"><p className="tableFont">+{c}%</p></div></TableCell>
             )
         }else{
             return(
-                <TableCell className="tableFont">-</TableCell>
+                <TableCell><p className="tableFont">-</p></TableCell>
             )
         }
     }
@@ -100,11 +99,11 @@ class OptionChain extends React.Component{
     }
     inTheMoney(props){
         return(
-            <TableCell >
+            <TableCell>
                 <Grid container spacing={3}
                 direction="row"
                 justify="flex-start"
-                alignItems="stretch"
+                alignItems="center"
                 >
                     {
                         props.rowData.inTheMoney ? 
@@ -123,19 +122,19 @@ class OptionChain extends React.Component{
 
     cellRenderer(props){
         return(
-            <TableCell className="tableFont">{props.cellData}</TableCell>
+            <TableCell><p className="tableFont">{props.cellData}</p></TableCell>
         )
     }
 
     cellRendererFixed(props){
         return(
-            <TableCell className="tableFont">{Number(props.cellData).toFixed(2)}</TableCell>
+            <TableCell><p className="tableFont">{Number(props.cellData).toFixed(2)}</p></TableCell>
         )
     }
 
     impliedVolatility(props){
         return(
-            <TableCell className="tableFont">{Number(props.cellData*100).toFixed(2)}%</TableCell>
+            <TableCell><p className="tableFont">{Number(props.cellData*100).toFixed(2)}%</p></TableCell>
         )
     }
     
@@ -164,8 +163,8 @@ class OptionChain extends React.Component{
         this.props.orderBy(property);
     };
     render(){
-        const columnWidth = 100
-        const changeColumn = 120
+        const columnWidth = 70
+        const changeColumn = 90
         const greekColumn = 95
         const minWidth = 70
         return(
@@ -194,15 +193,17 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={columnWidth}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="lastPrice"
                                 dataKey="lastPrice"
-                                label="Last Price"
+                                label="Last"
                                 cellRenderer={this.cellRendererFixed}
                                 headerRenderer={this.headerRenderer}
                                 width={columnWidth}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="bid"
@@ -212,6 +213,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={columnWidth}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="ask"
@@ -221,6 +223,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={columnWidth}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="delta"
@@ -230,6 +233,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={greekColumn}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="gamma"
@@ -239,6 +243,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={greekColumn}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="theta"
@@ -248,6 +253,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={greekColumn}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="rho"
@@ -257,6 +263,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={greekColumn}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="vega"
@@ -266,6 +273,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={greekColumn}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column
                                 key="change"
@@ -275,6 +283,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={changeColumn}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column
                                 key="percentChange"
@@ -284,6 +293,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={changeColumn}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="volume"
@@ -293,6 +303,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={columnWidth}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="openInterest"
@@ -302,6 +313,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={columnWidth}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                             <Column 
                                 key="impliedVolatility"
@@ -311,6 +323,7 @@ class OptionChain extends React.Component{
                                 headerRenderer={this.headerRenderer}
                                 width={changeColumn}
                                 minWidth={minWidth}
+                                flexGrow={1}
                             />
                         </Table>    
                         )}

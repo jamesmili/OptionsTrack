@@ -96,7 +96,7 @@ class ContractInfo extends React.Component{
                         direction="row"
                         justify="space-around"
                         alignItems="center"
-                        spacing={7}
+                        spacing={5}
                     >
                         <Grid item>
                             <TableContainer>
@@ -109,7 +109,7 @@ class ContractInfo extends React.Component{
                                                         <TableCell component="th" align="left" scope="row">
                                                             {row.id}
                                                         </TableCell>
-                                                        <TableCell style={{ width: 160 }} align="right">
+                                                        <TableCell style={{ width: "15vw" }} align="right">
                                                             {row.value}
                                                         </TableCell>
                                                     </TableRow>
@@ -131,7 +131,7 @@ class ContractInfo extends React.Component{
                                                         <TableCell component="th" align="left" scope="row">
                                                             {row.id}
                                                         </TableCell>
-                                                        <TableCell style={{ width: 160 }} align="right">
+                                                        <TableCell style={{ width: "15vw" }} align="right">
                                                             {row.value}
                                                         </TableCell>
                                                     </TableRow>
@@ -153,7 +153,7 @@ class ContractInfo extends React.Component{
                                                         <TableCell component="th" align="left" scope="row">
                                                             {row.id}
                                                         </TableCell>
-                                                        <TableCell style={{ width: 160 }} align="right">
+                                                        <TableCell style={{ width: "15vw" }} align="right">
                                                             {row.value}
                                                         </TableCell>
                                                     </TableRow>

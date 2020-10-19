@@ -199,17 +199,17 @@ html{
 
 @media only screen and (min-width: 1900px){
   html{
-    font-size: 0.5vw;
+    font-size: 15px;
   }
   #content{
     width: 75%;
   }
   .tableHeaderFont{
-    font-size: 0.5vw;
+    font-size: 0.55vw;
     text-overflow: ellipsis
   }
   .tableFont{
-    font-size: 0.6vw;
+    font-size: 0.65vw;
     text-overflow: ellipsis;
   }
 }

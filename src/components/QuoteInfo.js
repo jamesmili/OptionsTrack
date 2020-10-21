@@ -16,13 +16,20 @@ class QuoteInfo extends React.Component{
             assetProfile: {},
             summaryDetail: [],
             earnings: {},
-            currentEarnings: {}
+            currentEarnings: {},
+            symbol: null
         }
         this.getData = this.getData.bind(this)
     }
 
     componentDidMount(){
         this.getData()
+    }
+
+    componentDidUpdate(){
+        if (this.props.ticker !== this.state.symbol){
+            this.getData()
+        }
     }
 
     getData(){
@@ -66,10 +73,12 @@ class QuoteInfo extends React.Component{
                     {id: "High", value: response.data.quoteSummary.result[0].summaryDetail.regularMarketDayHigh.fmt},
                     {id: "Low", value: response.data.quoteSummary.result[0].summaryDetail.regularMarketDayLow.fmt},
                     {id: "Volume", value: response.data.quoteSummary.result[0].summaryDetail.volume.fmt},
-                    {id: "Market Cap", value: response.data.quoteSummary.result[0].summaryDetail.marketCap? response.data.quoteSummary.result[0].summaryDetail.marketCap.longFmt : "N/A"},
+                    {id: "Market Cap", value: Object.keys(response.data.quoteSummary.result[0].summaryDetail.marketCap).length > 0? 
+                        response.data.quoteSummary.result[0].summaryDetail.marketCap.longFmt : "N/A"},
                 ],
                 earnings: earningsVal,
-                currentEarnings: currentEarning
+                currentEarnings: currentEarning,
+                symbol: this.props.ticker
             })
         }).catch(error =>{
             console.log(error)
@@ -83,7 +92,7 @@ class QuoteInfo extends React.Component{
                     return(
                         <TableRow key={row.id}>
                             <TableCell component="th" align="left" scope="row">
-                                {row.id}
+                                <b>{row.id}:</b>
                             </TableCell>
                             <TableCell style={{ width: "15vw" }} align="right">
                                 {row.value}
@@ -117,7 +126,7 @@ class QuoteInfo extends React.Component{
                 <TableRow>
                     <TableRow key={this.state.currentEarnings.quarter}>
                         <TableCell component="th" align="left" scope="row">
-                            Quarter
+                            <b>Quarter:</b>
                         </TableCell>
                         <TableCell style={{ width: "15vw" }} align="right">
                             {this.state.currentEarnings.quarter}
@@ -125,7 +134,7 @@ class QuoteInfo extends React.Component{
                     </TableRow>
                     <TableRow key={this.state.currentEarnings.date}>
                         <TableCell component="th" align="left" scope="row">
-                            Date
+                            <b>Date:</b>
                         </TableCell>
                         <TableCell style={{ width: "15vw" }} align="right">
                             {this.state.currentEarnings.date}
@@ -133,7 +142,7 @@ class QuoteInfo extends React.Component{
                     </TableRow>
                     <TableRow key={this.state.currentEarnings.estimate}>
                         <TableCell component="th" align="left" scope="row">
-                            Estimate
+                            <b>Estimate:</b>
                         </TableCell>
                         <TableCell style={{ width: "15vw" }} align="right">
                             {this.state.currentEarnings.estimate}
@@ -174,19 +183,24 @@ class QuoteInfo extends React.Component{
                             <TableContainer>
                                 <Table>
                                 <TableHead>
-                                    <TableRow>
-                                        <TableCell style={{ width: "7vw" }} >Date</TableCell>
-                                        <TableCell style={{ width: "7vw" }} >Actual</TableCell>
-                                        <TableCell style={{ width: "7vw" }} >Estimate</TableCell>
-                                    </TableRow>
+                                    {
+                                        Object.keys(this.state.earnings).length > 0?
+                                        <TableRow>
+                                            <TableCell style={{ width: "7vw" }} ><b>Date</b></TableCell>
+                                            <TableCell style={{ width: "7vw" }} ><b>Actual</b></TableCell>
+                                            <TableCell style={{ width: "7vw" }} ><b>Estimate</b></TableCell>
+                                        </TableRow>
+                                        :
+                                        null
+                                    }
                                 </TableHead>
                                     <TableBody>
-                                            {
-                                                Object.keys(this.state.earnings).length > 0?
-                                                earnings()
-                                                :
-                                                <p>N/A</p>
-                                            }
+                                        {
+                                            Object.keys(this.state.earnings).length > 0?
+                                            earnings()
+                                            :
+                                            <p>N/A</p>
+                                        }
                                     </TableBody>
                                 </Table>
                             </TableContainer>

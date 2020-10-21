@@ -7,7 +7,8 @@ const initialState = {
     callsPuts: true,
     order: 'asc',
     orderBy: 'strike',
-    dark: false
+    dark: false,
+    tab: 0
 };
   
 export const calls = (c) => ({

@@ -31,9 +31,7 @@ class Contract extends React.Component{
     }
     componentDidMount(){
         var period = new Date().setHours(0,0,0,0)/1000 - 60*60*24
-        interval = "2m"
         var interval = "2m"
-        console.log(period)
         this.getData(period, interval)
         this.setState({
             loading: false

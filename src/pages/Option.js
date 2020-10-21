@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import greeks from '../greeks/greeks';
 import OptionTable from '../components/OptionTable';
 import { connect } from 'react-redux';
-import { calls, puts, exprDate, currTicker, quote } from '../state/app';
+import { calls, puts, exprDate, currTicker, quote, tab } from '../state/app';
 import { navigate } from "gatsby"
 import OpenInterest from '../components/OpenInterest';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -31,12 +31,14 @@ class Option extends React.Component{
     }
 
     componentDidMount(){
+        console.log("mount")
         this.updateData(this.props.epoch)
         this.intervalID = setInterval(() => {
             this.updateData(this.props.epoch)
         },1000)
     }
     componentWillUnmount(){
+        console.log("unmount")
         clearInterval(this.intervalID)
     }
 
@@ -50,6 +52,7 @@ class Option extends React.Component{
     }
 
     updateData(epoch){
+        console.log(this.props.ticker)
         const e = epoch ? "?date=" + epoch : ""
         axios.get(proxyURL + quoteURL + this.props.ticker + e, {
             headers: {
@@ -229,7 +232,7 @@ function TabPanel(props){
 const mapStateToProps = (state, props) => {
     return {
         epoch: state.app.epoch,
-        dark: state.app.dark
+        dark: state.app.dark,
     }
 }
 
@@ -238,7 +241,7 @@ const mapActionsToProps = dispatch => ({
     puts: (p) => dispatch(puts(p)),
     exprDate: (e) => dispatch(exprDate(e)),
     currTicker: (q) => dispatch(currTicker(q)),
-    quote: (q) => dispatch(quote(q))
+    quote: (q) => dispatch(quote(q)),
 });
 
 export default connect(mapStateToProps, mapActionsToProps) (Option)

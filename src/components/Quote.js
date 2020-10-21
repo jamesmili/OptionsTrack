@@ -22,7 +22,7 @@ class Quote extends React.Component{
             symbol: null,
             toggle: "1d",
             high: 999999,
-            low: 0
+            low: 0,
         }
         this.hover = this.hover.bind(this)
         this.convertDate = this.convertDate.bind(this)
@@ -37,6 +37,13 @@ class Quote extends React.Component{
         this.setState({
             loading: false
         })
+    }
+    componentDidUpdate(){
+        if (this.props.ticker !== this.state.symbol){
+            var period = new Date().setHours(0,0,0,0)/1000 - 60*60*24
+            var interval = "2m"
+            this.getData(period, interval)
+        }
     }
 
     getData(period, interval){

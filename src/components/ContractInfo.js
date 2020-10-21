@@ -107,7 +107,7 @@ class ContractInfo extends React.Component{
                                                 return(
                                                     <TableRow key={row.id}>
                                                         <TableCell component="th" align="left" scope="row">
-                                                            {row.id}
+                                                            <b>{row.id}</b>
                                                         </TableCell>
                                                         <TableCell style={{ width: "15vw" }} align="right">
                                                             {row.value}
@@ -129,7 +129,7 @@ class ContractInfo extends React.Component{
                                                 return(
                                                     <TableRow key={row.id}>
                                                         <TableCell component="th" align="left" scope="row">
-                                                            {row.id}
+                                                            <b>{row.id}</b>
                                                         </TableCell>
                                                         <TableCell style={{ width: "15vw" }} align="right">
                                                             {row.value}
@@ -151,7 +151,7 @@ class ContractInfo extends React.Component{
                                                 return(
                                                     <TableRow key={row.id}>
                                                         <TableCell component="th" align="left" scope="row">
-                                                            {row.id}
+                                                            <b>{row.id}</b>
                                                         </TableCell>
                                                         <TableCell style={{ width: "15vw" }} align="right">
                                                             {row.value}

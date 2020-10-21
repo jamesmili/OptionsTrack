@@ -121,15 +121,27 @@ class OptionChain extends React.Component{
     }
 
     cellRenderer(props){
-        return(
-            <TableCell><p className="tableFont">{props.cellData}</p></TableCell>
-        )
+        if (props.cellData){
+            return(
+                <TableCell><p className="tableFont">{props.cellData}</p></TableCell>
+            )
+        }else{
+            return(
+                <TableCell><p className="tableFont">0</p></TableCell>
+            )
+        }
     }
 
     cellRendererFixed(props){
-        return(
-            <TableCell><p className="tableFont">{Number(props.cellData).toFixed(2)}</p></TableCell>
-        )
+        if (props.cellData){
+            return(
+                <TableCell><p className="tableFont">{Number(props.cellData).toFixed(2)}</p></TableCell>
+            )
+        }else{
+            return(
+                <TableCell><p className="tableFont">0.00</p></TableCell>
+            )
+        }
     }
 
     impliedVolatility(props){

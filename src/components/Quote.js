@@ -1,16 +1,14 @@
 import React from 'react'
-import Header from '../components/Header'
 import axios from "axios";
-import { ResponsiveContainer, LineChart, Line, Tooltip } from 'recharts';
-import ContractInfo from '../components/ContractInfo';
-import Grid from '@material-ui/core/Grid';
-import { connect } from 'react-redux'
+import { proxyURL, chartURL, month } from '../constants/const';
+import { ResponsiveContainer, LineChart, Line, Tooltip, YAxis } from 'recharts';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { proxyURL, chartURL, month } from '../constants/const';
+import Grid from '@material-ui/core/Grid';
+import QuoteInfo from './QuoteInfo';
 
-class Contract extends React.Component{
+class Quote extends React.Component{
     constructor(props){
         super(props)
         this.state = {
@@ -23,17 +21,18 @@ class Contract extends React.Component{
             date: "",
             symbol: null,
             toggle: "1d",
+            high: 999999,
+            low: 0
         }
         this.hover = this.hover.bind(this)
         this.convertDate = this.convertDate.bind(this)
         this.tooltip = this.tooltip.bind(this)
         this.getData = this.getData.bind(this)
     }
+
     componentDidMount(){
         var period = new Date().setHours(0,0,0,0)/1000 - 60*60*24
-        interval = "2m"
         var interval = "2m"
-        console.log(period)
         this.getData(period, interval)
         this.setState({
             loading: false
@@ -41,7 +40,7 @@ class Contract extends React.Component{
     }
 
     getData(period, interval){
-        axios.get(proxyURL + chartURL + this.props.contract + "?period1=" + period + "&period2=9999999999&interval=" + interval, {
+        axios.get(proxyURL + chartURL + this.props.ticker + "?period1=" + period + "&period2=9999999999&interval=" + interval, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',
@@ -50,6 +49,8 @@ class Contract extends React.Component{
         }).then(response => {
             var prevPrice = 0.00
             var p = 0.00
+            var h = -99999999999
+            var l = 999999999999
             this.setState({
                 meta: response.data.chart.result[0].meta,
                 timestamp: response.data.chart.result[0].timestamp.map((d) => {
@@ -69,13 +70,21 @@ class Contract extends React.Component{
                     }else{
                         p = Number(response.data.chart.result[0].indicators.quote[0].close[index].toFixed(2))
                         prevPrice = p
+                        if (p < l){
+                            l = p
+                        }else if (h < p){
+                            h = p
+                        }
                     }
                     return {
                         Date: t,
                         Price: p
-
                     }
                 })
+            })
+            this.setState({
+                high: h,
+                low: l
             })
         }).catch(error =>{
             console.log(error)
@@ -104,15 +113,16 @@ class Contract extends React.Component{
         }
         return expr
     }
-
+    
     tooltip(data){
     }
 
     render(){
         const chart = (
             <ResponsiveContainer width="99%" aspect={3} >
-                <LineChart data={this.state.data} onMouseMove={this.hover}>
-                    <Tooltip content={this.tooltip}/>
+                <LineChart data={this.state.data} onMouseMove={this.hover} margin={{right: 15, left: 15}}>
+                    <YAxis tick={false} domain={[this.state.low, this.state.high]}/>
+                    <Tooltip />
                     <Line type='monotone' dataKey='Price' stroke='#8884d8' strokeWidth={3} dot={false} />
                 </LineChart>
             </ResponsiveContainer>
@@ -143,7 +153,7 @@ class Contract extends React.Component{
                     break;
                 case "Max":
                     period = 0
-                    interval = "1d"
+                    interval = "5d"
                     break;
                 default:
                     period = new Date().setHours(0,0,0,0)/1000
@@ -156,77 +166,62 @@ class Contract extends React.Component{
             this.getData(period,interval)
         }
         return(
-            <div id="body">
-                <Header />
-                <div id="container">
+            <div className="tabs">
                 {
                     this.state.loading ? 
                     <div id="loadingContainer">
                         <CircularProgress color='inherit'/> 
                     </div>
-                    :
-                    <div id="content">
-                        <Grid container
-                            direction="column"
-                            justify="center"
-                            alignItems="flex-start">
-                            <Grid item id="chart"> 
-                                <Grid container
-                                    direction="row"
-                                    justify="space-between"
-                                    alignItems="center">
-                                    <Grid item>
-                                        <h2>{this.props.contract}</h2>
-                                        <h1>${this.state.price}</h1>
-                                        <h4>{this.state.date}</h4>
-                                    </Grid>
-                                    <Grid item>
-                                        <ToggleButtonGroup
-                                        size="medium"
-                                        value={this.state.toggle}
-                                        exclusive
-                                        onChange={handleButton}>
-                                            <ToggleButton value="1d">
-                                                1d
-                                            </ToggleButton>
-                                            <ToggleButton value="5d">
-                                                5d
-                                            </ToggleButton>
-                                            <ToggleButton value="1m">
-                                                1m
-                                            </ToggleButton>
-                                            <ToggleButton value="6m">
-                                                6m
-                                            </ToggleButton>
-                                            <ToggleButton value="1y">
-                                                1y
-                                            </ToggleButton>
-                                            <ToggleButton value="Max">
-                                                Max
-                                            </ToggleButton>
-                                        </ToggleButtonGroup>
-                                    </Grid>
+                :
+                    <Grid container
+                        direction="column"
+                        justify="center"
+                        alignItems="flex-start"
+                        spacing={4}
+                        >
+                        <Grid item id="chart"> 
+                            <Grid container
+                                direction="row"
+                                justify="flex-end"
+                                alignItems="flex-start"
+                                spacing={8}>
+                                <Grid item>
+                                    <ToggleButtonGroup
+                                    size="medium"
+                                    value={this.state.toggle}
+                                    exclusive
+                                    onChange={handleButton}>
+                                        <ToggleButton value="1d">
+                                            1d
+                                        </ToggleButton>
+                                        <ToggleButton value="5d">
+                                            5d
+                                        </ToggleButton>
+                                        <ToggleButton value="1m">
+                                            1m
+                                        </ToggleButton>
+                                        <ToggleButton value="6m">
+                                            6m
+                                        </ToggleButton>
+                                        <ToggleButton value="1y">
+                                            1y
+                                        </ToggleButton>
+                                        <ToggleButton value="Max">
+                                            Max
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
                                 </Grid>
                                 {chart}
                             </Grid>
-                            <Grid item>
-                                <ContractInfo ticker={this.props.ticker}
-                                            contract={this.props.contract}/>
-                            </Grid>
                         </Grid>
-                    </div>
+                        <Grid item>
+                            <QuoteInfo ticker={this.props.ticker}/>
+                        </Grid>
+                    </Grid>
                 }
-                </div>
             </div>
         )
     }
 }
 
-const mapStateToProps = (state, props) => {
-    return {
-        data: state.app.contractInfo
-    }
-}
-
-
-export default connect(mapStateToProps) (Contract)
+export default Quote;

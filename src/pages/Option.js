@@ -13,6 +13,7 @@ import OpenInterest from '../components/OpenInterest';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 import { proxyURL, quoteURL } from '../constants/const'
+import Quote from '../components/Quote'
 
 class Option extends React.Component{
     constructor(props){
@@ -196,12 +197,16 @@ class Option extends React.Component{
                                     onChange={handleTabs}>
                                     <Tab label="Option Chain"/>
                                     <Tab label="Open Interest"/>
+                                    <Tab label="Quote"/>
                                 </Tabs>
                                 <TabPanel value={this.state.value} index={0}>
                                     <OptionTable updateData={this.updateData}/>
                                 </TabPanel>
                                 <TabPanel value={this.state.value} index={1}>
                                     <OpenInterest updateData={this.updateData}/>
+                                </TabPanel>
+                                <TabPanel value={this.state.value} index={2}>
+                                    <Quote ticker={this.props.ticker}/>
                                 </TabPanel>
                             </div>
                         </div>

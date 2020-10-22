@@ -95,10 +95,10 @@ class ContractInfo extends React.Component{
                     <Grid container
                         direction="row"
                         justify="space-around"
-                        alignItems="center"
+                        alignItems="flex-start"
                         spacing={5}
                     >
-                        <Grid item>
+                        <Grid item sm={12} md={4} className="list" >
                             <TableContainer>
                                 <Table>
                                     <TableBody>
@@ -106,10 +106,10 @@ class ContractInfo extends React.Component{
                                             {this.state.tableData1.map((row) =>{
                                                 return(
                                                     <TableRow key={row.id}>
-                                                        <TableCell component="th" align="left" scope="row">
+                                                        <TableCell className="listItem" component="th" align="left" scope="row">
                                                             <b>{row.id}</b>
                                                         </TableCell>
-                                                        <TableCell style={{ width: "15vw" }} align="right">
+                                                        <TableCell align="right">
                                                             {row.value}
                                                         </TableCell>
                                                     </TableRow>
@@ -120,7 +120,7 @@ class ContractInfo extends React.Component{
                                 </Table>
                             </TableContainer>
                         </Grid>
-                        <Grid item>
+                        <Grid item sm={12} md={4} className="list">
                             <TableContainer>
                                 <Table>
                                     <TableBody>
@@ -128,10 +128,10 @@ class ContractInfo extends React.Component{
                                             {this.state.tableData2.map((row) =>{
                                                 return(
                                                     <TableRow key={row.id}>
-                                                        <TableCell component="th" align="left" scope="row">
+                                                        <TableCell  className="listItem" component="th" align="left" scope="row">
                                                             <b>{row.id}</b>
                                                         </TableCell>
-                                                        <TableCell style={{ width: "15vw" }} align="right">
+                                                        <TableCell align="right">
                                                             {row.value}
                                                         </TableCell>
                                                     </TableRow>
@@ -142,7 +142,7 @@ class ContractInfo extends React.Component{
                                 </Table>
                             </TableContainer>
                         </Grid>
-                        <Grid item>
+                        <Grid item sm={12} md={4} className="list">
                             <TableContainer>
                                 <Table>
                                     <TableBody>
@@ -150,10 +150,10 @@ class ContractInfo extends React.Component{
                                             {this.state.greeks.map((row) =>{
                                                 return(
                                                     <TableRow key={row.id}>
-                                                        <TableCell component="th" align="left" scope="row">
+                                                        <TableCell className="listItem" component="th" align="left" scope="row">
                                                             <b>{row.id}</b>
                                                         </TableCell>
-                                                        <TableCell style={{ width: "15vw" }} align="right">
+                                                        <TableCell align="right">
                                                             {row.value}
                                                         </TableCell>
                                                     </TableRow>

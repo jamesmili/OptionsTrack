@@ -17,7 +17,7 @@ class OpenInterest extends React.Component{
         }
         const convertDate = (epoch) => {
             const date = new Date(epoch*1000)
-            const expr = month[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getFullYear()
+            const expr = date.toLocaleDateString(undefined,  {year: 'numeric', month: 'short', day: 'numeric'})
             return expr
         }
         const formatYAxis = (tickItem) => {

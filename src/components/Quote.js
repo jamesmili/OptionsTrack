@@ -7,6 +7,19 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import QuoteInfo from './QuoteInfo';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableRow from '@material-ui/core/TableRow';
+import { withStyles } from "@material-ui/core/styles";
+import MuiTableCell from "@material-ui/core/TableCell";
+
+const TableCell = withStyles({
+    root: {
+      borderBottom: "none"
+    }
+  })(MuiTableCell);
 
 class Quote extends React.Component{
     constructor(props){
@@ -17,14 +30,11 @@ class Quote extends React.Component{
             timestamp: [],
             quote: [],
             data: [],
-            price: 0.00,
-            date: "",
             symbol: null,
             toggle: "1d",
             high: 999999,
             low: 0,
         }
-        this.hover = this.hover.bind(this)
         this.convertDate = this.convertDate.bind(this)
         this.tooltip = this.tooltip.bind(this)
         this.getData = this.getData.bind(this)
@@ -101,35 +111,58 @@ class Quote extends React.Component{
         })
     }
 
-    hover(data){
-        if (data.isTooltipActive && data.activePayload) {
-            this.setState({ 
-                price: Number(data.activePayload[0].payload.Price).toFixed(2), 
-                date: data.activePayload[0].payload.Date
-            })
-        }
-    }
-
     convertDate(epoch){
         const date = new Date(epoch*1000)
         var expr
         if (this.state.toggle === "1d"){
-            expr = "Today"
+            expr = date.toLocaleDateString(undefined, {year: 'numeric', month: 'short', day: 'numeric'} ) + " " + date.toLocaleTimeString('en-US')
         }else{
-            expr = month[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getFullYear()
+            expr = date.toLocaleDateString(undefined,  {year: 'numeric', month: 'short', day: 'numeric'})
         }
         return expr
     }
     
-    tooltip(data){
+    tooltip({ active, payload }){
+        
+        if (active) {
+            return(
+                <Paper id="tooltip">
+                    <TableContainer>
+                        <Table>
+                            <TableBody>
+                                <TableRow>
+                                    <TableRow key={payload[0].payload.Date}>
+                                        <TableCell component="th" scope="row">
+                                            <b>Date:</b>
+                                        </TableCell>
+                                        <TableCell>
+                                            {payload[0].payload.Date}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow key={payload[0].payload.Price}>
+                                        <TableCell component="th" scope="row">
+                                            <b>Price:</b>
+                                        </TableCell>
+                                        <TableCell>
+                                            ${payload[0].payload.Price}
+                                        </TableCell>
+                                    </TableRow>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Paper>
+            )
+        }
+        return null
     }
 
     render(){
         const chart = (
-            <ResponsiveContainer width="99%" aspect={3} >
-                <LineChart data={this.state.data} onMouseMove={this.hover} margin={{right: 15, left: 15}}>
-                    <YAxis tick={false} domain={[this.state.low, this.state.high]}/>
-                    <Tooltip />
+            <ResponsiveContainer width="99%" height={400}>
+                <LineChart data={this.state.data} onMouseMove={this.hover}>
+                    <YAxis tick={false} domain={[this.state.low, this.state.high]} hide/>
+                    <Tooltip content={this.tooltip}/>
                     <Line type='monotone' dataKey='Price' stroke='#8884d8' strokeWidth={3} dot={false} />
                 </LineChart>
             </ResponsiveContainer>
@@ -186,10 +219,10 @@ class Quote extends React.Component{
                         alignItems="flex-start"
                         spacing={4}
                         >
-                        <Grid item id="chart"> 
+                        <Grid item id="chart" xs={12}> 
                             <Grid container
                                 direction="row"
-                                justify="flex-end"
+                                justify="flex-start"
                                 alignItems="flex-start"
                                 spacing={8}>
                                 <Grid item>
@@ -218,7 +251,9 @@ class Quote extends React.Component{
                                         </ToggleButton>
                                     </ToggleButtonGroup>
                                 </Grid>
-                                {chart}
+                                <Grid item xs={12} className="list">
+                                    {chart}
+                                </Grid>
                             </Grid>
                         </Grid>
                         <Grid item>

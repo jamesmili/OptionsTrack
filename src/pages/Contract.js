@@ -98,7 +98,7 @@ class Contract extends React.Component{
         if (this.state.toggle === "1d"){
             expr = "Today"
         }else{
-            expr = month[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getFullYear()
+            expr = date.toLocaleDateString(undefined,  {year: 'numeric', month: 'short', day: 'numeric'})
         }
         return expr
     }
@@ -108,7 +108,7 @@ class Contract extends React.Component{
 
     render(){
         const chart = (
-            <ResponsiveContainer width="99%" aspect={3} >
+            <ResponsiveContainer width="99%" height={400} >
                 <LineChart data={this.state.data} onMouseMove={this.hover}>
                     <Tooltip content={this.tooltip}/>
                     <Line type='monotone' dataKey='Price' stroke='#8884d8' strokeWidth={3} dot={false} />
@@ -167,8 +167,8 @@ class Contract extends React.Component{
                         <Grid container
                             direction="column"
                             justify="center"
-                            alignItems="flex-start">
-                            <Grid item id="chart"> 
+                            alignItems="center">
+                            <Grid item xs={12} className="list"> 
                                 <Grid container
                                     direction="row"
                                     justify="space-between"
@@ -204,10 +204,12 @@ class Contract extends React.Component{
                                             </ToggleButton>
                                         </ToggleButtonGroup>
                                     </Grid>
+                                    <Grid item xs={12} className="list">
+                                        {chart}
+                                    </Grid>
                                 </Grid>
-                                {chart}
                             </Grid>
-                            <Grid item>
+                            <Grid item xs={12} className="list">
                                 <ContractInfo ticker={this.props.ticker}
                                             contract={this.props.contract}/>
                             </Grid>

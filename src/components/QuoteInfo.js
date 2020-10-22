@@ -91,10 +91,10 @@ class QuoteInfo extends React.Component{
                 this.state.summaryDetail.map((row) => {
                     return(
                         <TableRow key={row.id}>
-                            <TableCell component="th" align="left" scope="row">
+                            <TableCell className="listItem" component="th" align="left" scope="row">
                                 <b>{row.id}:</b>
                             </TableCell>
-                            <TableCell style={{ width: "15vw" }} align="right">
+                            <TableCell align="right">
                                 {row.value}
                             </TableCell>
                         </TableRow>
@@ -125,26 +125,26 @@ class QuoteInfo extends React.Component{
             return(
                 <TableRow>
                     <TableRow key={this.state.currentEarnings.quarter}>
-                        <TableCell component="th" align="left" scope="row">
+                        <TableCell className="listItem" component="th" align="left" scope="row">
                             <b>Quarter:</b>
                         </TableCell>
-                        <TableCell style={{ width: "15vw" }} align="right">
+                        <TableCell align="right">
                             {this.state.currentEarnings.quarter}
                         </TableCell>
                     </TableRow>
                     <TableRow key={this.state.currentEarnings.date}>
-                        <TableCell component="th" align="left" scope="row">
+                        <TableCell className="listItem" component="th" align="left" scope="row">
                             <b>Date:</b>
                         </TableCell>
-                        <TableCell style={{ width: "15vw" }} align="right">
+                        <TableCell align="right">
                             {this.state.currentEarnings.date}
                         </TableCell>
                     </TableRow>
                     <TableRow key={this.state.currentEarnings.estimate}>
-                        <TableCell component="th" align="left" scope="row">
+                        <TableCell className="listItem" component="th" align="left" scope="row">
                             <b>Estimate:</b>
                         </TableCell>
-                        <TableCell style={{ width: "15vw" }} align="right">
+                        <TableCell align="right">
                             {this.state.currentEarnings.estimate}
                         </TableCell>
                     </TableRow>
@@ -159,12 +159,13 @@ class QuoteInfo extends React.Component{
                         direction="row"
                         justify="space-between"
                         alignItems="flex-start"
+                        spacing={5}
                         >
                         <Grid item>
                             <h2>About</h2>
                             <p>{this.state.assetProfile.value}</p>                            
                         </Grid>
-                        <Grid item>
+                        <Grid item sm={12} md={4} className="list">
                             <h2>Details</h2>
                             <TableContainer>
                                 <Table>
@@ -178,7 +179,7 @@ class QuoteInfo extends React.Component{
                                 </Table>
                             </TableContainer>
                         </Grid>
-                        <Grid item>
+                        <Grid item sm={12} md={4} className="list">
                             <h2>Earnings</h2>
                             <TableContainer>
                                 <Table>
@@ -186,9 +187,9 @@ class QuoteInfo extends React.Component{
                                     {
                                         Object.keys(this.state.earnings).length > 0?
                                         <TableRow>
-                                            <TableCell style={{ width: "7vw" }} ><b>Date</b></TableCell>
-                                            <TableCell style={{ width: "7vw" }} ><b>Actual</b></TableCell>
-                                            <TableCell style={{ width: "7vw" }} ><b>Estimate</b></TableCell>
+                                            <TableCell className="listItem"><b>Date</b></TableCell>
+                                            <TableCell className="listItem"><b>Actual</b></TableCell>
+                                            <TableCell className="listItem"><b>Estimate</b></TableCell>
                                         </TableRow>
                                         :
                                         null
@@ -205,7 +206,7 @@ class QuoteInfo extends React.Component{
                                 </Table>
                             </TableContainer>
                         </Grid>
-                        <Grid item>
+                        <Grid item sm={12} md={4} className="list">
                             <h2>Upcoming Earnings</h2>
                             <TableContainer>
                                 <Table>

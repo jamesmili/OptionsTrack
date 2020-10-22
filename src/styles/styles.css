@@ -85,9 +85,6 @@ html{
 #puts{
   background-color: #FFA296;
 }
-#chart{
-  width: 75%;
-}
 #divider{
   margin-bottom: 10px;
   margin-top: 10px;
@@ -163,7 +160,16 @@ html{
 #graph{
   padding: 10px;
 }
-@media only screen and (max-width: 353px){
+.list{
+  width: 100%;
+}
+.listItem{
+  width: 100%;
+}
+#tooltip{
+  width: 100%;
+}
+@media only screen and (max-width: 500px){
   #expr{
     float: none;
   }
@@ -186,8 +192,8 @@ html{
   #tableFunction{
     margin-bottom: 10px;
   }
-  #chart{
-    width: 100%;
+  .chart{
+    height: 200%;
   }
 }
 

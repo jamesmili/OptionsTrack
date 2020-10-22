@@ -31,14 +31,12 @@ class Option extends React.Component{
     }
 
     componentDidMount(){
-        console.log("mount")
         this.updateData(this.props.epoch)
         this.intervalID = setInterval(() => {
             this.updateData(this.props.epoch)
         },1000)
     }
     componentWillUnmount(){
-        console.log("unmount")
         clearInterval(this.intervalID)
     }
 
@@ -52,7 +50,6 @@ class Option extends React.Component{
     }
 
     updateData(epoch){
-        console.log(this.props.ticker)
         const e = epoch ? "?date=" + epoch : ""
         axios.get(proxyURL + quoteURL + this.props.ticker + e, {
             headers: {
@@ -197,7 +194,9 @@ class Option extends React.Component{
                             <div>
                                 <Tabs 
                                     value={this.state.value} 
-                                    onChange={handleTabs}>
+                                    onChange={handleTabs}
+                                    variant="scrollable"
+                                    scrollButtons="auto">
                                     <Tab label="Option Chain"/>
                                     <Tab label="Open Interest"/>
                                     <Tab label="Quote"/>

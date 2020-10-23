@@ -68,6 +68,9 @@ class Option extends React.Component{
             this.props.currTicker(this.props.ticker)
             this.props.calls(
                 response.data.optionChain.result[0].options[0].calls.map((op) => {
+                    if (!op.hasOwnProperty('volume')){ 
+                        op['volume'] = 0
+                    }
                     var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
                     op['delta'] = x[0]
                     op['gamma'] = x[1]
@@ -77,15 +80,19 @@ class Option extends React.Component{
                     return op
                 })
             )
-            this.props.puts(response.data.optionChain.result[0].options[0].puts.map((op) => {
-                        var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
-                        op['delta'] = x[0]
-                        op['gamma'] = x[1]
-                        op['theta'] = x[2]
-                        op['rho'] = x[3]
-                        op['vega'] = x[4]
-                        return op
-                    })
+            this.props.puts(
+                response.data.optionChain.result[0].options[0].puts.map((op) => {
+                    if (!op.hasOwnProperty('volume')){ 
+                        op['volume'] = 0
+                    }
+                    var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
+                    op['delta'] = x[0]
+                    op['gamma'] = x[1]
+                    op['theta'] = x[2]
+                    op['rho'] = x[3]
+                    op['vega'] = x[4]
+                    return op
+                })
             )
             this.props.exprDate(response.data.optionChain.result[0].expirationDates)
             this.setState({ loading: false })
@@ -130,11 +137,7 @@ class Option extends React.Component{
                 )
             }
         }
-        const styles = theme => ({
-            indicator: {
-              backgroundColor: '#444444',
-            },
-          })
+        
         return(
             <div id="body">
                 <Header/>
@@ -146,7 +149,7 @@ class Option extends React.Component{
                         </div>
                         :
                         <div id="content">
-                            <div>
+                            <div id="quoteStats">
                                 <Grid container>
                                     <Grid item>
                                         <p className="ticker">{this.state.quote.longName} ({this.state.quote.symbol})</p>

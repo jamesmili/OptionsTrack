@@ -70,7 +70,7 @@ class OptionChain extends React.Component{
             )
         }else if (c > 0){
             return(
-                <TableCell><div className="positive"><p className="tableFont">+{c}</p></div></TableCell>
+                <TableCell><div className="positive"><p className="tableFont">{c}</p></div></TableCell>
             )
         }else{
             return(
@@ -86,7 +86,7 @@ class OptionChain extends React.Component{
             )
         }else if (c > 0){
             return(
-                <TableCell><div className="positive"><p className="tableFont">+{c}%</p></div></TableCell>
+                <TableCell><div className="positive"><p className="tableFont">{c}%</p></div></TableCell>
             )
         }else{
             return(

@@ -14,6 +14,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from "@material-ui/core/styles";
 import MuiTableCell from "@material-ui/core/TableCell";
+import { connect } from 'react-redux';
+import { period, interval } from '../state/app';
 
 const TableCell = withStyles({
     root: {
@@ -41,18 +43,15 @@ class Quote extends React.Component{
     }
 
     componentDidMount(){
-        var period = new Date().setHours(0,0,0,0)/1000 - 60*60*24
-        var interval = "2m"
-        this.getData(period, interval)
+        this.getData(this.props.p, this.props.i)
         this.setState({
             loading: false
         })
     }
+
     componentDidUpdate(){
         if (this.props.ticker !== this.state.symbol){
-            var period = new Date().setHours(0,0,0,0)/1000 - 60*60*24
-            var interval = "2m"
-            this.getData(period, interval)
+            this.getData(this.props.p, this.props.i)
         }
     }
 
@@ -204,6 +203,8 @@ class Quote extends React.Component{
                 toggle: flag,
             })
             this.getData(period,interval)
+            this.props.interval(interval)
+            this.props.period(period)
         }
         return(
             <div className="tabs">
@@ -266,4 +267,16 @@ class Quote extends React.Component{
     }
 }
 
-export default Quote;
+const mapStateToProps = (state, props) => {
+    return {
+        p: state.app.period,
+        i: state.app.interval,
+    }
+}
+
+const mapActionsToProps = dispatch => ({
+    period: (p) => dispatch(period(p)),
+    interval: (i) => dispatch(interval(i))
+});
+
+export default connect(mapStateToProps, mapActionsToProps) (Quote);

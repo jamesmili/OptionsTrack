@@ -2,33 +2,40 @@
 html{
   font-family: 'Lato', sans-serif;
 }
+.background{
+  background-color: #191B28;
+  color: #EEF4FF;
+}
+.paper{
+  background-color: #1E202D;
+}
 .positive{
-  background-color: #84FFA0;
+  background-color: #06EA8C;
   padding-left: 10px;
   padding-right: 10px;
   width: 100%;
 }
 .negative{
-  background-color: #FFA296;
+  background-color: #F57979;
   padding-left: 10px;
   padding-right: 10px;
   width: 100%;
 }
 .gain{
-  color: #00CB00;
+  color: #06EA8C;
 }
 .loss{
-  color: #EA1B00;
+  color: #F57979;
 }
 .itm{
-  background-color: #84FFA0;
+  background-color: #06EA8C;
   height: 45px;
   width:5px;
   margin-right: 5px;
   float: left;
 }
 .otm{
-  background-color: #FFA296;
+  background-color: #F57979;
   height: 45px;
   width:5px;
   margin-right: 5px;
@@ -79,11 +86,11 @@ html{
 
 
 #calls{
-  background-color:#84FFA0;
+  background-color:#06EA8C;
 }
 
 #puts{
-  background-color: #FFA296;
+  background-color: #F57979;
 }
 #divider{
   margin-bottom: 10px;
@@ -120,6 +127,7 @@ html{
 }
 .tabs{
   margin-top: 15px;
+  padding: 15px;
 }
 #tableFunction{
   margin-bottom: 10px;
@@ -169,6 +177,9 @@ html{
 #tooltip{
   width: 100%;
 }
+#quoteStats{
+  padding: 15px;
+}
 @media only screen and (max-width: 500px){
   #expr{
     float: none;
@@ -194,6 +205,9 @@ html{
   }
   .chart{
     height: 200%;
+  }
+  .tabs{
+    padding: 0px;
   }
 }
 

@@ -6,7 +6,6 @@ import FormControl from '@material-ui/core/FormControl';
 import { connect } from 'react-redux';
 import { epoch } from '../state/app';
 import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Legend, Line, ResponsiveContainer} from 'recharts';
-import { month } from '../constants/const'
 
 class OpenInterest extends React.Component{
     render(){
@@ -85,8 +84,8 @@ class OpenInterest extends React.Component{
                                     }}/>
                                 <Tooltip />
                                 <Legend layout="horizontal" verticalAlign="top" />
-                                <Bar yAxisId="left" dataKey="Puts" fill="#FF8B8B" />
-                                <Bar yAxisId="left" dataKey="Calls" fill="#8BD5FF" />
+                                <Bar yAxisId="left" dataKey="Puts" fill="#DB4646" />
+                                <Bar yAxisId="left" dataKey="Calls" fill="#06EA8C" />
                                 <Line type="monotone" yAxisId="right" dataKey="Value" fill="#8884D8"/>
                             </ComposedChart>
                         </ResponsiveContainer>
@@ -104,28 +103,31 @@ const mapStateToProps = (state, props) => {
     var p = 0
     var maxPain = Infinity
     var maxPainStrike = 0
-    for (var i = 0; i < state.app.calls.length; i++){
-        if (Math.abs(state.app.calls[i].strike-state.app.quote.regularMarketPrice) <= state.app.quote.regularMarketPrice*.05){
+    var indexCalls = state.app.calls.findIndex(x => x.inTheMoney === false)
+    var indexPuts = state.app.puts.findIndex(x => x.inTheMoney === true)
+    for (var i = indexCalls-10; i < indexCalls+10; i++){
+        if (state.app.calls[i])
+        {
             data1.push({
                 "strike": Number(state.app.calls[i].strike).toFixed(2),
                 "Calls": state.app.calls[i].openInterest,
                 "callPrice": state.app.calls[i].lastPrice,
                 "cITM": state.app.calls[i].inTheMoney
             })
+            c += state.app.calls[i].openInterest ? state.app.calls[i].openInterest : 0
         }
-        c += state.app.calls[i].openInterest ? state.app.calls[i].openInterest : 0
     }
-
-    for (var j = 0; j < state.app.puts.length; j++){
-        if (Math.abs(state.app.puts[j].strike-state.app.quote.regularMarketPrice) <= state.app.quote.regularMarketPrice*.05){
+    for (var j = indexPuts-10; j < indexPuts+10; j++){
+        if (state.app.puts[j])
+        {
             data2.push({
                 "strike": Number(state.app.puts[j].strike).toFixed(2),
                 "Puts": state.app.puts[j].openInterest,
                 "putPrice": state.app.puts[j].lastPrice,
                 "pITM": state.app.puts[j].inTheMoney
             })
+            p += state.app.puts[j].openInterest ? state.app.puts[j].openInterest : 0
         }
-        p += state.app.puts[j].openInterest ? state.app.puts[j].openInterest : 0
     }    
     for (var k = 0; k < data1.length; k++){
         var obj = data2.find(e => e.strike === data1[k].strike)
@@ -141,8 +143,6 @@ const mapStateToProps = (state, props) => {
             })
         }
     }
-    
-
     for (var l = 0; l < data.length; l++){
         var diff = Number(Math.abs(Number(data[l].strike)- Number(state.app.quote.regularMarketPrice)).toFixed(2))
         var puts = data[l].pITM ? diff * data[l].Puts * 100 : 0

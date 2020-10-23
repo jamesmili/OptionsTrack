@@ -8,7 +8,9 @@ const initialState = {
     order: 'asc',
     orderBy: 'strike',
     dark: false,
-    tab: 0
+    tab: 0,
+    period: new Date().setHours(0,0,0,0)/1000 - 60*60*24,
+    interval: "2m"
 };
   
 export const calls = (c) => ({
@@ -64,6 +66,16 @@ export const orderBy = (ob) => ({
 export const darkMode = (d) => ({
     type: "DARKMODE",
     dark: d
+})
+
+export const period = (p) => ({
+    type: "PERIOD",
+    period: p
+})
+
+export const interval = (i) => ({
+    type: "INTERVAL",
+    interval: i
 })
 
 export default (state = initialState, action) => {
@@ -122,6 +134,16 @@ export default (state = initialState, action) => {
             return{
                 ...state,
                 dark: action.dark
+            }
+        case 'PERIOD':
+            return{
+                ...state,
+                period: action.period
+            }
+        case 'INTERVAL':
+            return{
+                ...state,
+                interval: action.interval
             }
         default:
             return {

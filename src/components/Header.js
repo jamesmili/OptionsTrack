@@ -29,6 +29,7 @@ class Header extends React.Component{
                         onChange={(e) => onChange(e)}
                         onRequestSearch={() => onSearch()}
                         id="searchBar"
+                        placeholder="Search Quote"
                     />
                 </Toolbar>
 

@@ -84,7 +84,7 @@ class OpenInterest extends React.Component{
                                     }}/>
                                 <Tooltip />
                                 <Legend layout="horizontal" verticalAlign="top" />
-                                <Bar yAxisId="left" dataKey="Puts" fill="#DB4646" />
+                                <Bar yAxisId="left" dataKey="Puts" fill="#F57979" />
                                 <Bar yAxisId="left" dataKey="Calls" fill="#06EA8C" />
                                 <Line type="monotone" yAxisId="right" dataKey="Value" fill="#8884D8"/>
                             </ComposedChart>

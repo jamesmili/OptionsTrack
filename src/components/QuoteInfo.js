@@ -74,7 +74,7 @@ class QuoteInfo extends React.Component{
                     {id: "Low", value: response.data.quoteSummary.result[0].summaryDetail.regularMarketDayLow.fmt},
                     {id: "Volume", value: response.data.quoteSummary.result[0].summaryDetail.volume.fmt},
                     {id: "Market Cap", value: Object.keys(response.data.quoteSummary.result[0].summaryDetail.marketCap).length > 0? 
-                        response.data.quoteSummary.result[0].summaryDetail.marketCap.longFmt : "N/A"},
+                        response.data.quoteSummary.result[0].summaryDetail.marketCap.fmt : "N/A"},
                 ],
                 earnings: earningsVal,
                 currentEarnings: currentEarning,

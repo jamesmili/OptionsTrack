@@ -60,11 +60,7 @@ class Contract extends React.Component{
             this.setState({
                 date: this.state.timestamp[this.state.timestamp.length - 1],
                 data:this.state.timestamp.map((t,index) => {
-                    if (!response.data.chart.result[0].indicators.quote[0].close[index]){
-                        if (index > 0){
-                            p = prevPrice
-                        }
-                    }else{
+                    if (response.data.chart.result[0].indicators.quote[0].close[index]){
                         p = Number(response.data.chart.result[0].indicators.quote[0].close[index].toFixed(2))
                         prevPrice = p
                     }

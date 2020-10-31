@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { proxyURL, chartURL, month } from '../constants/const';
+import { proxyURL, chartURL } from '../constants/const';
 
 class Contract extends React.Component{
     constructor(props){
@@ -30,23 +30,23 @@ class Contract extends React.Component{
         this.getData = this.getData.bind(this)
     }
     componentDidMount(){
-        var period = new Date().setHours(0,0,0,0)/1000 - 60*60*24
+        var period = new Date().setHours(0,0,0,0)/1000 + 60*60*9.5
+        var period2 = period + 60*60*6.5
         var interval = "2m"
-        this.getData(period, interval)
+        this.getData(period, period2, interval)
         this.setState({
             loading: false
         })
     }
 
-    getData(period, interval){
-        axios.get(proxyURL + chartURL + this.props.contract + "?period1=" + period + "&period2=9999999999&interval=" + interval, {
+    getData(period, period2, interval){
+        axios.get(proxyURL + chartURL + this.props.contract + "?period1=" + period + "&period2=" + period2 + "&interval=" + interval, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',
                 'Content-Type': 'application/json'
             }
         }).then(response => {
-            var prevPrice = 0.00
             var p = 0.00
             this.setState({
                 meta: response.data.chart.result[0].meta,
@@ -62,7 +62,6 @@ class Contract extends React.Component{
                 data:this.state.timestamp.map((t,index) => {
                     if (response.data.chart.result[0].indicators.quote[0].close[index]){
                         p = Number(response.data.chart.result[0].indicators.quote[0].close[index].toFixed(2))
-                        prevPrice = p
                     }
                     return {
                         Date: t,
@@ -112,42 +111,48 @@ class Contract extends React.Component{
             </ResponsiveContainer>
         )
         const handleButton = (event, flag) => {
-            var period
-            var interval
+            var period, period2, interval
             switch(flag){
                 case "1d":
-                    period = new Date().setHours(0,0,0,0)/1000 - 60*60*24
+                    period = new Date().setHours(0,0,0,0)/1000 + 60*60*9.5
+                    period2 = period + 60*60*6.5
                     interval = "2m"
                     break;
                 case "5d":
                     period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*5
+                    period2 = 9999999999
                     interval = "15m"
                     break;
                 case "1m":
                     period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*31
+                    period2 = 9999999999
                     interval = "1h"
                     break;
                 case "6m":
                     period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*183
+                    period2 = 9999999999
                     interval = "1d"
                     break;
                 case "1y":
                     period = (new Date().setHours(0,0,0,0)/1000) - 60*60*24*365
+                    period2 = 9999999999
                     interval = "1d"
                     break;
                 case "Max":
                     period = 0
+                    period2 = 9999999999
                     interval = "1d"
                     break;
                 default:
                     period = new Date().setHours(0,0,0,0)/1000
+                    period2 = 9999999999
                     interval = "2m"
                     break;
             }
             this.setState({
                 toggle: flag,
             })
-            this.getData(period,interval)
+            this.getData(period, period2, interval)
         }
         return(
             <div id="body">

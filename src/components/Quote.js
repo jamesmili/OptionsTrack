@@ -15,7 +15,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from "@material-ui/core/styles";
 import MuiTableCell from "@material-ui/core/TableCell";
 import { connect } from 'react-redux';
-import { period, interval } from '../state/app';
+import { period, interval, quoteToggle } from '../state/app';
 
 const TableCell = withStyles({
     root: {
@@ -74,7 +74,8 @@ class Quote extends React.Component{
                 }),
                 quote: response.data.chart.result[0].indicators.quote,
                 price: Number(response.data.chart.result[0].meta.regularMarketPrice).toFixed(2),
-                symbol: response.data.chart.result[0].meta.symbol
+                symbol: response.data.chart.result[0].meta.symbol,
+                flag: this.props.q
             })
             this.setState({
                 date: this.state.timestamp[this.state.timestamp.length - 1],
@@ -167,8 +168,7 @@ class Quote extends React.Component{
             </ResponsiveContainer>
         )
         const handleButton = (event, flag) => {
-            var period
-            var interval
+            var period, interval
             switch(flag){
                 case "1d":
                     period = new Date().setHours(0,0,0,0)/1000 - 60*60*24
@@ -195,7 +195,7 @@ class Quote extends React.Component{
                     interval = "5d"
                     break;
                 default:
-                    period = new Date().setHours(0,0,0,0)/1000
+                    period = new Date().setHours(0,0,0,0)/1000 - 60*60*24
                     interval = "2m"
                     break;
             }
@@ -203,6 +203,7 @@ class Quote extends React.Component{
                 toggle: flag,
             })
             this.getData(period,interval)
+            this.props.quoteToggle(flag)
             this.props.interval(interval)
             this.props.period(period)
         }
@@ -229,7 +230,7 @@ class Quote extends React.Component{
                                 <Grid item>
                                     <ToggleButtonGroup
                                     size="medium"
-                                    value={this.state.toggle}
+                                    value={this.props.q}
                                     exclusive
                                     onChange={handleButton}>
                                         <ToggleButton value="1d">
@@ -271,12 +272,14 @@ const mapStateToProps = (state, props) => {
     return {
         p: state.app.period,
         i: state.app.interval,
+        q: state.app.quoteToggle
     }
 }
 
 const mapActionsToProps = dispatch => ({
     period: (p) => dispatch(period(p)),
-    interval: (i) => dispatch(interval(i))
+    interval: (i) => dispatch(interval(i)),
+    quoteToggle: (q) => dispatch(quoteToggle(q))
 });
 
 export default connect(mapStateToProps, mapActionsToProps) (Quote);

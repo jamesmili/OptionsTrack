@@ -10,7 +10,8 @@ const initialState = {
     dark: false,
     tab: 0,
     period: new Date().setHours(0,0,0,0)/1000 - 60*60*24,
-    interval: "2m"
+    interval: "2m",
+    quoteToggle: '1d'
 };
   
 export const calls = (c) => ({
@@ -76,6 +77,11 @@ export const period = (p) => ({
 export const interval = (i) => ({
     type: "INTERVAL",
     interval: i
+})
+
+export const quoteToggle = (q) => ({
+    type: 'QUOTETOGGLE',
+    quoteToggle: q
 })
 
 export default (state = initialState, action) => {
@@ -144,6 +150,11 @@ export default (state = initialState, action) => {
             return{
                 ...state,
                 interval: action.interval
+            }
+        case 'QUOTETOGGLE':
+            return{
+                ...state,
+                quoteToggle: action.quoteToggle
             }
         default:
             return {

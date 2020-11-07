@@ -36,7 +36,6 @@ class Contract extends React.Component{
     }
 
     getData(period, period2, interval){
-        console.log(chartURL + this.props.contract + "?period1=" + period + "&period2=" + period2 + "&interval=" + interval)
         axios.get(proxyURL + chartURL + this.props.contract + "?period1=" + period + "&period2=" + period2 + "&interval=" + interval, {
             headers: {
                 'Access-Control-Allow-Origin': '*',

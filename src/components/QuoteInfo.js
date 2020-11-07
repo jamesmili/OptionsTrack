@@ -63,7 +63,6 @@ class QuoteInfo extends React.Component{
             }else{
                 earningsVal = {}
             }
-            console.log(response)
             this.setState({
                 assetProfile: {
                     id: "About",

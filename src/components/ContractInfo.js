@@ -61,7 +61,10 @@ class ContractInfo extends React.Component{
         }).catch(error =>{
             navigate(`/400`)
         })
-        axios.get(proxyURL + quoteURL + this.props.ticker, {
+        const regex = /[0-9]{2}/g
+        const found = this.props.contract.match(regex)
+        const exprEpoch = (new Date(20+found[0], found[1] -1, found[2])).valueOf()/1000 - 60*60*5
+        axios.get(proxyURL + quoteURL + this.props.ticker + "?date=" + exprEpoch, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',
@@ -106,10 +109,10 @@ class ContractInfo extends React.Component{
                                             {this.state.tableData1.map((row) =>{
                                                 return(
                                                     <TableRow key={row.id}>
-                                                        <TableCell className="listItem" component="th" align="left" scope="row">
+                                                        <TableCell className="listItem" component="th"scope="row">
                                                             <b>{row.id}</b>
                                                         </TableCell>
-                                                        <TableCell align="right">
+                                                        <TableCell>
                                                             {row.value}
                                                         </TableCell>
                                                     </TableRow>
@@ -128,10 +131,10 @@ class ContractInfo extends React.Component{
                                             {this.state.tableData2.map((row) =>{
                                                 return(
                                                     <TableRow key={row.id}>
-                                                        <TableCell  className="listItem" component="th" align="left" scope="row">
+                                                        <TableCell  className="listItem" component="th" scope="row">
                                                             <b>{row.id}</b>
                                                         </TableCell>
-                                                        <TableCell align="right">
+                                                        <TableCell>
                                                             {row.value}
                                                         </TableCell>
                                                     </TableRow>
@@ -150,10 +153,10 @@ class ContractInfo extends React.Component{
                                             {this.state.greeks.map((row) =>{
                                                 return(
                                                     <TableRow key={row.id}>
-                                                        <TableCell className="listItem" component="th" align="left" scope="row">
+                                                        <TableCell className="listItem" component="th" scope="row">
                                                             <b>{row.id}</b>
                                                         </TableCell>
-                                                        <TableCell align="right">
+                                                        <TableCell>
                                                             {row.value}
                                                         </TableCell>
                                                     </TableRow>

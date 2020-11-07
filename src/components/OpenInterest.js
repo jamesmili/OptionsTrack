@@ -15,7 +15,7 @@ class OpenInterest extends React.Component{
             this.props.updateData(epoch)
         }
         const convertDate = (epoch) => {
-            const date = new Date(epoch*1000)
+            const date = new Date(epoch*1000 + 1000*60*60*10)
             const expr = date.toLocaleDateString(undefined,  {year: 'numeric', month: 'short', day: 'numeric'})
             return expr
         }

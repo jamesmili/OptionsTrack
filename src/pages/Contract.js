@@ -15,13 +15,9 @@ class Contract extends React.Component{
         super(props)
         this.state = {
             loading: true,
-            meta: null,
-            timestamp: [],
-            quote: [],
             data: [],
             price: 0.00,
             date: "",
-            symbol: null,
             toggle: "1d",
         }
         this.hover = this.hover.bind(this)
@@ -40,6 +36,7 @@ class Contract extends React.Component{
     }
 
     getData(period, period2, interval){
+        console.log(chartURL + this.props.contract + "?period1=" + period + "&period2=" + period2 + "&interval=" + interval)
         axios.get(proxyURL + chartURL + this.props.contract + "?period1=" + period + "&period2=" + period2 + "&interval=" + interval, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -49,26 +46,18 @@ class Contract extends React.Component{
         }).then(response => {
             var p = 0.00
             this.setState({
-                meta: response.data.chart.result[0].meta,
-                timestamp: response.data.chart.result[0].timestamp.map((d) => {
-                    return this.convertDate(d)
-                }),
-                quote: response.data.chart.result[0].indicators.quote,
                 price: Number(response.data.chart.result[0].meta.regularMarketPrice).toFixed(2),
-                symbol: response.data.chart.result[0].meta.symbol
-            })
-            this.setState({
-                date: this.state.timestamp[this.state.timestamp.length - 1],
-                data:this.state.timestamp.map((t,index) => {
+                date: this.convertDate(response.data.chart.result[0].timestamp[response.data.chart.result[0].timestamp.length - 1]),
+                data: response.data.chart.result[0].timestamp.map((d,index) => {
                     if (response.data.chart.result[0].indicators.quote[0].close[index]){
                         p = Number(response.data.chart.result[0].indicators.quote[0].close[index].toFixed(2))
                     }
                     return {
-                        Date: t,
+                        Date: this.convertDate(d),
                         Price: p
 
                     }
-                })
+                }),
             })
         }).catch(error =>{
             console.log(error)
@@ -228,6 +217,5 @@ const mapStateToProps = (state, props) => {
         data: state.app.contractInfo
     }
 }
-
 
 export default connect(mapStateToProps) (Contract)

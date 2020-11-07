@@ -23,7 +23,6 @@ class Option extends React.Component{
             quote: {},
             expirationDateEpoch: this.props.epoch,
             ticker: this.props.ticker,
-            flag: true,
             marketStatus: "REGULAR",
             value: 0
         }

@@ -63,6 +63,7 @@ class QuoteInfo extends React.Component{
             }else{
                 earningsVal = {}
             }
+            console.log(response)
             this.setState({
                 assetProfile: {
                     id: "About",
@@ -75,6 +76,11 @@ class QuoteInfo extends React.Component{
                     {id: "Volume", value: response.data.quoteSummary.result[0].summaryDetail.volume.fmt},
                     {id: "Market Cap", value: Object.keys(response.data.quoteSummary.result[0].summaryDetail.marketCap).length > 0? 
                         response.data.quoteSummary.result[0].summaryDetail.marketCap.fmt : "N/A"},
+                    {id: "P/E Ratio", value: response.data.quoteSummary.result[0].summaryDetail.trailingPE? 
+                        response.data.quoteSummary.result[0].summaryDetail.trailingPE.fmt
+                        :
+                        "N/A"
+                    }
                 ],
                 earnings: earningsVal,
                 currentEarnings: currentEarning,

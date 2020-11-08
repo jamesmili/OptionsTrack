@@ -36,7 +36,15 @@ class Contract extends React.Component{
     }
 
     getData(period, period2, interval){
-        axios.get(proxyURL + chartURL + this.props.contract + "?period1=" + period + "&period2=" + period2 + "&interval=" + interval, {
+        var p1
+        var day = new Date(period*1000).getDay()
+        //weekend
+        if (day === 0 || day === 6){
+            p1 = "?"
+        }else{
+            p1 = "?period1=" + period + "&"
+        }
+        axios.get(proxyURL + chartURL + this.props.contract + p1 + "period2=" + period2 + "&interval=" + interval, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',
@@ -90,6 +98,7 @@ class Contract extends React.Component{
     }
 
     render(){
+        
         const chart = (
             <ResponsiveContainer width="99%" height={400} >
                 <LineChart data={this.state.data} onMouseMove={this.hover}>

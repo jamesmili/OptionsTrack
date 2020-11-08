@@ -56,7 +56,15 @@ class Quote extends React.Component{
     }
 
     getData(period, interval){
-        axios.get(proxyURL + chartURL + this.props.ticker + "?period1=" + period + "&period2=9999999999&interval=" + interval, {
+        var p1
+        var day = new Date(period*1000).getDay()
+        //weekend
+        if (day === 0 || day === 6){
+            p1 = "?"
+        }else{
+            p1 = "?period1=" + period + "&"
+        }
+        axios.get(proxyURL + chartURL + this.props.ticker + p1 + "&period2=9999999999&interval=" + interval, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',

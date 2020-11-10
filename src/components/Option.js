@@ -1,19 +1,17 @@
 import React from 'react';
 import axios from "axios";
 import Grid from '@material-ui/core/Grid';
-import Header from '../components/Header';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import greeks from '../greeks/greeks';
-import OptionTable from '../components/OptionTable';
+import OptionTable from './OptionTable';
 import { connect } from 'react-redux';
-import { calls, puts, exprDate, currTicker, quote, tab } from '../state/app';
-import { navigate } from "gatsby"
-import OpenInterest from '../components/OpenInterest';
+import { calls, puts, exprDate, currTicker, quote, tab } from '../actionReducer/actionReducer';
+import OpenInterest from './OpenInterest';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 import { proxyURL, quoteURL } from '../constants/const'
-import Quote from '../components/Quote'
+import Quote from './Quote'
 
 class Option extends React.Component{
     constructor(props){
@@ -22,7 +20,7 @@ class Option extends React.Component{
             loading: true,
             quote: {},
             expirationDateEpoch: this.props.epoch,
-            ticker: this.props.ticker,
+            ticker: this.props.match.params.ticker,
             marketStatus: "REGULAR",
             value: 0
         }
@@ -40,7 +38,7 @@ class Option extends React.Component{
     }
 
     componentDidUpdate(){
-        if (this.props.ticker !== this.state.ticker){
+        if (this.props.match.params.ticker !== this.state.ticker){
             this.updateData(this.state.expirationDateEpoch)
         }
         if (this.state.marketStatus !== "REGULAR"){
@@ -50,7 +48,7 @@ class Option extends React.Component{
 
     updateData(epoch){
         const e = epoch ? "?date=" + epoch : ""
-        axios.get(proxyURL + quoteURL + this.props.ticker + e, {
+        axios.get(proxyURL + quoteURL + this.props.match.params.ticker + e, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',
@@ -61,10 +59,10 @@ class Option extends React.Component{
                 quote: response.data.optionChain.result[0].quote,
                 expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
                 marketStatus: response.data.optionChain.result[0].quote.marketState,
-                ticker: this.props.ticker,
+                ticker: this.props.match.params.ticker,
             })
             this.props.quote(this.state.quote)
-            this.props.currTicker(this.props.ticker)
+            this.props.currTicker(this.props.match.params.ticker)
             this.props.calls(
                 response.data.optionChain.result[0].options[0].calls.map((op) => {
                     if (!op.hasOwnProperty('volume')){ 
@@ -97,7 +95,7 @@ class Option extends React.Component{
             this.setState({ loading: false })
         }).catch(error =>{
             console.log(error)
-            navigate(`/400`)
+            this.props.history.push('/400')
         })
     }
 
@@ -138,8 +136,6 @@ class Option extends React.Component{
         }
         
         return(
-            <div id="body">
-                <Header/>
                 <div id="container">
                     {
                         this.state.loading ? 
@@ -210,13 +206,12 @@ class Option extends React.Component{
                                     <OpenInterest updateData={this.updateData}/>
                                 </TabPanel>
                                 <TabPanel value={this.state.value} index={2}>
-                                    <Quote ticker={this.props.ticker}/>
+                                    <Quote ticker={this.props.match.params.ticker}/>
                                 </TabPanel>
                             </div>
                         </div>
                     }
                 </div>
-            </div>
         )
     }
 }

@@ -4,7 +4,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import { connect } from 'react-redux';
-import { epoch } from '../state/app';
+import { epoch } from '../actionReducer/actionReducer';
 import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Legend, Line, ResponsiveContainer} from 'recharts';
 
 class OpenInterest extends React.Component{

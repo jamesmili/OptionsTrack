@@ -15,7 +15,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from "@material-ui/core/styles";
 import MuiTableCell from "@material-ui/core/TableCell";
 import { connect } from 'react-redux';
-import { period, interval, quoteToggle } from '../state/app';
+import { period, interval, quoteToggle } from '../actionReducer/actionReducer';
 
 const TableCell = withStyles({
     root: {

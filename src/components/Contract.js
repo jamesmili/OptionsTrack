@@ -1,8 +1,7 @@
 import React from 'react'
-import Header from '../components/Header'
 import axios from "axios";
 import { ResponsiveContainer, LineChart, Line, Tooltip } from 'recharts';
-import ContractInfo from '../components/ContractInfo';
+import ContractInfo from './ContractInfo';
 import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux'
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -44,7 +43,7 @@ class Contract extends React.Component{
         }else{
             p1 = "?period1=" + period + "&"
         }
-        axios.get(proxyURL + chartURL + this.props.contract + p1 + "period2=" + period2 + "&interval=" + interval, {
+        axios.get(proxyURL + chartURL + this.props.match.params.contract + p1 + "period2=" + period2 + "&interval=" + interval, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',
@@ -71,6 +70,7 @@ class Contract extends React.Component{
             this.setState({
                 data: []
             })
+            this.props.history.push('/400')
         })
     }
 
@@ -152,8 +152,6 @@ class Contract extends React.Component{
             this.getData(period, period2, interval)
         }
         return(
-            <div id="body">
-                <Header />
                 <div id="container">
                 {
                     this.state.loading ? 
@@ -172,7 +170,7 @@ class Contract extends React.Component{
                                     justify="space-between"
                                     alignItems="center">
                                     <Grid item>
-                                        <h2>{this.props.contract}</h2>
+                                        <h2>{this.props.match.params.contract}</h2>
                                         <h1>${this.state.price}</h1>
                                         <h4>{this.state.date}</h4>
                                     </Grid>
@@ -208,14 +206,15 @@ class Contract extends React.Component{
                                 </Grid>
                             </Grid>
                             <Grid item xs={12} className="list">
-                                <ContractInfo ticker={this.props.ticker}
-                                            contract={this.props.contract}/>
+                                <ContractInfo ticker={this.props.match.params.ticker}
+                                            contract={this.props.match.params.contract}
+                                            history={this.props.history}
+                                            />
                             </Grid>
                         </Grid>
                     </div>
                 }
                 </div>
-            </div>
         )
     }
 }

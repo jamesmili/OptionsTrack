@@ -6,7 +6,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
-import { navigate } from "gatsby"
 import greeks from '../greeks/greeks';
 import { proxyURL, quoteURL } from '../constants/const'
 
@@ -59,7 +58,8 @@ class ContractInfo extends React.Component{
                 ]
             })
         }).catch(error =>{
-            navigate(`/400`)
+            console.log(error)
+            this.props.history.push('/404')
         })
         const regex = /[0-9]{2}/g
         const found = this.props.contract.match(regex)

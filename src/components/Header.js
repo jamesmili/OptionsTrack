@@ -1,23 +1,29 @@
 import React from 'react';
-import { Link, navigate } from "gatsby"
 import SearchBar from "material-ui-search-bar";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import {Link, Redirect} from 'react-router-dom'
 import '../styles/styles.css'
+import { withRouter } from "react-router";
 
 class Header extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            ticker: ""
+            ticker: "",
+            route: false
         }
     }
     render(){
         const onSearch = () => {
-            navigate(`/options/${this.state.ticker}`)
+            this.setState({route: true})
         }
         var onChange = (value) => {
             this.setState({ticker: value})
+        }
+        if (this.state.route === true) {
+            this.setState({route: false})
+            return <Redirect to={'/options/'+this.state.ticker} />
         }
         return(
             <AppBar position="static" id="header">

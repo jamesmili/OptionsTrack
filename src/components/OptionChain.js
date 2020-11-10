@@ -3,9 +3,9 @@ import TableCell from '@material-ui/core/TableCell';
 import Grid from '@material-ui/core/Grid';
 import { AutoSizer, Column, Table, WindowScroller } from 'react-virtualized';
 import 'react-virtualized/styles.css'
-import { Link } from "gatsby";
+import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
-import { contractInfo, order, orderBy } from '../state/app';
+import { contractInfo, order, orderBy } from '../actionReducer/actionReducer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 class OptionChain extends React.Component{
@@ -107,9 +107,9 @@ class OptionChain extends React.Component{
                 >
                     {
                         props.rowData.inTheMoney ? 
-                        <div className="itm"></div>
+                        <span className="itm"></span>
                         :
-                        <div className="otm"></div>
+                        <span className="otm"></span>
 
                     }
                     <Link to={`/options/${this.props.currTicker}/${props.rowData.contractSymbol}`} onClick={this.handleClickLink(props.rowData)} >

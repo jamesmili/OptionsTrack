@@ -23,7 +23,10 @@ class OptionTable extends React.Component{
             return expr
         }
         const handleButton = (event, flag) => {
-            this.props.callsPuts(flag)
+            if (flag !== null){
+                this.props.callsPuts(flag)
+                this.props.updateData(this.props.epochVal)
+            }
         }
         return(
             <div className="tabs">

@@ -6,7 +6,7 @@ import Tab from '@material-ui/core/Tab';
 import greeks from '../greeks/greeks';
 import OptionTable from './OptionTable';
 import { connect } from 'react-redux';
-import { calls, puts, exprDate, currTicker, quote, tab } from '../actionReducer/actionReducer';
+import { calls, puts, exprDate, currTicker, quote } from '../actionReducer/actionReducer';
 import OpenInterest from './OpenInterest';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
@@ -60,39 +60,41 @@ class Option extends React.Component{
                 expirationDateEpoch: response.data.optionChain.result[0].options[0].expirationDate,
                 marketStatus: response.data.optionChain.result[0].quote.marketState,
                 ticker: this.props.match.params.ticker,
+            }, () => {
+                this.props.quote(this.state.quote)
+                this.props.currTicker(this.props.match.params.ticker)
+                this.props.callsPuts ?
+                this.props.calls(
+                    response.data.optionChain.result[0].options[0].calls.map((op) => {
+                        if (!op.hasOwnProperty('volume')){ 
+                            op['volume'] = 0
+                        }
+                        var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
+                        op['delta'] = x[0]
+                        op['gamma'] = x[1]
+                        op['theta'] = x[2]
+                        op['rho'] = x[3]
+                        op['vega'] = x[4]
+                        return op
+                    })
+                )
+                : this.props.puts(
+                    response.data.optionChain.result[0].options[0].puts.map((op) => {
+                        if (!op.hasOwnProperty('volume')){ 
+                            op['volume'] = 0
+                        }
+                        var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
+                        op['delta'] = x[0]
+                        op['gamma'] = x[1]
+                        op['theta'] = x[2]
+                        op['rho'] = x[3]
+                        op['vega'] = x[4]
+                        return op
+                    })
+                )
+                this.props.exprDate(response.data.optionChain.result[0].expirationDates)
+                this.setState({ loading: false })
             })
-            this.props.quote(this.state.quote)
-            this.props.currTicker(this.props.match.params.ticker)
-            this.props.calls(
-                response.data.optionChain.result[0].options[0].calls.map((op) => {
-                    if (!op.hasOwnProperty('volume')){ 
-                        op['volume'] = 0
-                    }
-                    var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
-                    op['delta'] = x[0]
-                    op['gamma'] = x[1]
-                    op['theta'] = x[2]
-                    op['rho'] = x[3]
-                    op['vega'] = x[4]
-                    return op
-                })
-            )
-            this.props.puts(
-                response.data.optionChain.result[0].options[0].puts.map((op) => {
-                    if (!op.hasOwnProperty('volume')){ 
-                        op['volume'] = 0
-                    }
-                    var x = greeks(op, true, this.state.expirationDateEpoch, this.state.quote.regularMarketPrice)
-                    op['delta'] = x[0]
-                    op['gamma'] = x[1]
-                    op['theta'] = x[2]
-                    op['rho'] = x[3]
-                    op['vega'] = x[4]
-                    return op
-                })
-            )
-            this.props.exprDate(response.data.optionChain.result[0].expirationDates)
-            this.setState({ loading: false })
         }).catch(error =>{
             console.log(error)
             this.props.history.push('/400')
@@ -203,7 +205,7 @@ class Option extends React.Component{
                                     <OptionTable updateData={this.updateData}/>
                                 </TabPanel>
                                 <TabPanel value={this.state.value} index={1}>
-                                    <OpenInterest updateData={this.updateData}/>
+                                    <OpenInterest ticker={this.state.ticker}/>
                                 </TabPanel>
                                 <TabPanel value={this.state.value} index={2}>
                                     <Quote ticker={this.props.match.params.ticker}/>
@@ -229,6 +231,7 @@ const mapStateToProps = (state, props) => {
     return {
         epoch: state.app.epoch,
         dark: state.app.dark,
+        callsPuts: state.app.callsPuts
     }
 }
 

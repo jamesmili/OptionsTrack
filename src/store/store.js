@@ -1,7 +1,7 @@
 import { createStore, combineReducers} from 'redux';
 import actionReducer from '../actionReducer/actionReducer';
 
-export default () => {
+var store = () => {
 
     const store = createStore(
       combineReducers(
@@ -11,3 +11,5 @@ export default () => {
     );
     return store;
 }
+
+export default store;

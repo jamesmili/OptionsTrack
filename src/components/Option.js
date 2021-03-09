@@ -29,12 +29,6 @@ class Option extends React.Component{
 
     componentDidMount(){
         this.updateData(this.props.epoch)
-        this.intervalID = setInterval(() => {
-            this.updateData(this.props.epoch)
-        },1000)
-    }
-    componentWillUnmount(){
-        clearInterval(this.intervalID)
     }
 
     componentDidUpdate(){

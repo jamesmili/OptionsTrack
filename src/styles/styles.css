@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
-html{
+html,body{
   font-family: 'Lato', sans-serif;
+  --tw-bg-opacity: 1;
+  background-color: rgba(17, 24, 39, var(--tw-bg-opacity));
 }
 .background{
   background-color: #191B28;

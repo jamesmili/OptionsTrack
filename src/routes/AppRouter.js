@@ -10,7 +10,7 @@ import Header from '../components/Header';
 
 export const AppRouter = () => (
     <Router history={history}>
-        <div id="body">
+        <div className="bg-gray-900">
             <Header/>
             <Switch>
                 <Route exact path="/">

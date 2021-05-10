@@ -1,177 +1,93 @@
-import React from 'react';
+import {useEffect, useState} from 'react';
 import axios from "axios";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
-import Grid from '@material-ui/core/Grid';
-import greeks from '../greeks/greeks';
 import { proxyURL, quoteURL } from '../constants/const'
+import Card from './Card'
 
-class ContractInfo extends React.Component{
-    constructor(props){
-        super(props)
-        this.state={
-            data: {
-                quote: {
-                    ask: 0.00,
-                    bid: 0.00,
-                    regularMarketOpen: 0.00,
-                    regularMarketDayHigh: 0.00,
-                    regularMarketDayLow: 0.00,
-                    regularMarketDayRange: "0.00 - 0.00",
-                    regularMarketVolume: 0,
-                    openInterest: 0,
-                }
-            },
-            greeks: [],
-            tableData1: [],
-            tableData2: []
+function ContractInfo(props){
+    let [name, setName] = useState("-")
+    let [symbol, setSymbol] = useState("-")
+    let [price, setPrice] = useState("-")
+    let [regularMarketDayLow, setRegularMarketDayLow] = useState("-")
+    let [regularMarketDayHigh, setRegularMarketDayHigh] = useState("-")
+    let [change, setChange] = useState("-")
+    let [changePercent, setChangePercent] = useState("-")
+    let [volume, setVolume] = useState("-")
+
+    useEffect(() => {
+        getData()
+    })
+
+    const getData = () => {
+        axios.get(proxyURL + quoteURL + props.contract, {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            var date = new Date(response.data.optionChain.result[0].quote.expireIsoDate)
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+            var p = response.data.optionChain.result[0].quote.shortName.split(' ')
+            var premium = response.data.optionChain.result[0].quote.underlyingSymbol + " " + 
+                months[date.getUTCMonth()]+' '+date.getUTCDate()+', '+date.getFullYear() +  " " + 
+                Number(p[p.length-2]).toFixed(2) + " " + p[p.length-1]
+            setName(premium.toUpperCase())
+            setSymbol(response.data.optionChain.result[0].quote.symbol)
+            setPrice(response.data.optionChain.result[0].quote.regularMarketPrice)
+            setRegularMarketDayHigh(response.data.optionChain.result[0].quote.regularMarketDayHigh)
+            setRegularMarketDayLow(response.data.optionChain.result[0].quote.regularMarketDayLow)
+            setChange(Number(response.data.optionChain.result[0].quote.regularMarketChange).toFixed(2))
+            setChangePercent(Number(response.data.optionChain.result[0].quote.regularMarketChangePercent).toFixed(2))
+            setVolume(response.data.optionChain.result[0].quote.regularMarketVolume)
+        }).catch(error =>{
+            console.log(error)
+        })
+    }
+        const regMarketPriceChange = () => {
+            if (change > 0){
+                return(
+                    <p className="mr-4 text-green-400">+{Number(change).toFixed(2)}</p>
+                )
+            }else if (change < 0){
+                return(
+                    <p className="mr-4 text-red-400">{Number(change).toFixed(2)}</p>
+                )                
+            }else{
+                return(
+                    <p className="mr-4">{Number(change).toFixed(2)}</p>
+                )
+            }
         }
-    }
-    componentDidMount(){
-        axios.get(proxyURL + quoteURL + this.props.contract, {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
-                'Content-Type': 'application/json'
+
+        const regMarketPriceChangePer = () => {
+            if (changePercent > 0){
+                return(
+                    <p className="mr-4 text-green-400">+{Number(changePercent).toFixed(2)}%</p>
+                )
+            }else if (changePercent < 0){
+                return(
+                    <p className="mr-4 text-red-400">{Number(changePercent).toFixed(2)}%</p>
+                )
+            }else{
+                return(
+                    <p className="mr-4">{Number(changePercent).toFixed(2)}%</p>
+                )
             }
-        }).then(response => {
-            this.setState({
-                data: response.data.optionChain.result[0],
-            })
-            this.setState({
-                tableData1: [
-                    {id: "Ask:", value: this.state.data.quote.ask},
-                    {id: "Bid:", value: this.state.data.quote.bid},
-                    {id: "Open:", value: this.state.data.quote.regularMarketOpen},
-                    {id: "High:", value: this.state.data.quote.regularMarketDayHigh},
-                    {id: "Low:", value: this.state.data.quote.regularMarketDayLow},
-                ],
-                tableData2: [
-                    {id: "Change:", value: Number(this.state.data.quote.regularMarketChange).toFixed(2)},
-                    {id: "Change %:", value: Number(this.state.data.quote.regularMarketChangePercent).toFixed(2)},
-                    {id: "Range:", value: this.state.data.quote.regularMarketDayRange},
-                    {id: "Volume:", value: this.state.data.quote.regularMarketVolume},
-                    {id: "Open Interest:", value: this.state.data.quote.openInterest},
-                ]
-            })
-        }).catch(error =>{
-            console.log(error)
-            this.props.history.push('/404')
-        })
-        const regex = /[0-9]{2}/g
-        const found = this.props.contract.match(regex)
-        const exprEpoch = (new Date(20+found[0], found[1] -1, found[2])).valueOf()/1000 - 60*60*5
-        axios.get(proxyURL + quoteURL + this.props.ticker + "?date=" + exprEpoch, {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Expose-Headers' : 'access-control-allow-origin',
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            var obj = response.data.optionChain.result[0].options[0].calls.find(o => o.contractSymbol === this.props.contract)
-            if (obj === undefined){
-                obj = response.data.optionChain.result[0].options[0].puts.find(o => o.contractSymbol === this.props.contract)
-            }
-            var x = greeks(obj, true, obj.expiration, response.data.optionChain.result[0].quote.regularMarketPrice)
-            var greek = [
-                {id: "Delta:", value: x[0]},
-                {id: "Gamma:", value: x[1]},
-                {id: "Theta:", value: x[2]},
-                {id: "Rho:", value: x[3]},
-                {id: "Vega:", value: x[4]},
-            ]
-            this.setState({
-                greeks: greek
-            })
-        }).catch(error =>{
-            console.log(error)
-        })
-    }
-    render(){
-        return(
-            <div>
-                <h1>Overview</h1>
-                <div id="overview">
-                    <Grid container
-                        direction="row"
-                        justify="space-around"
-                        alignItems="flex-start"
-                        spacing={5}
-                    >
-                        <Grid item sm={12} md={4} className="list" >
-                            <TableContainer>
-                                <Table>
-                                    <TableBody>
-                                        <TableRow>
-                                            {this.state.tableData1.map((row) =>{
-                                                return(
-                                                    <TableRow key={row.id}>
-                                                        <TableCell className="listItem" component="th"scope="row">
-                                                            <b>{row.id}</b>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {row.value}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )
-                                            })}
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
-                        <Grid item sm={12} md={4} className="list">
-                            <TableContainer>
-                                <Table>
-                                    <TableBody>
-                                        <TableRow>
-                                            {this.state.tableData2.map((row) =>{
-                                                return(
-                                                    <TableRow key={row.id}>
-                                                        <TableCell  className="listItem" component="th" scope="row">
-                                                            <b>{row.id}</b>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {row.value}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )
-                                            })}
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
-                        <Grid item sm={12} md={4} className="list">
-                            <TableContainer>
-                                <Table>
-                                    <TableBody>
-                                        <TableRow>
-                                            {this.state.greeks.map((row) =>{
-                                                return(
-                                                    <TableRow key={row.id}>
-                                                        <TableCell className="listItem" component="th" scope="row">
-                                                            <b>{row.id}</b>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {row.value}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )
-                                            })}
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
-                    </Grid>
-                </div>
+        }
+    return(
+        <div>
+            <p className="text-gray-200 text-2xl">{name}</p>
+            <p className="text-gray-600">{symbol}</p>
+            <div className="my-5 flex-col flex lg:flex-row justify-between xl:space-x-5">
+                <Card header={"Current Price:"} data={`$${Number(price).toFixed(2)}`}/>
+                <Card header={"Price Change:"} data={regMarketPriceChange()}/>
+                <Card header={"% Change:"} data={regMarketPriceChangePer()}/>
+                <Card header={"High:"} data={Number(regularMarketDayHigh).toFixed(2)}/>
+                <Card header={"Low:"} data={Number(regularMarketDayLow).toFixed(2)}/>
+                <Card header={"Volume:"} data={volume}/>
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default ContractInfo

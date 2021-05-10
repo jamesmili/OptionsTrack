@@ -1,0 +1,14 @@
+.chart {
+  margin: 0;
+  height: 320px;
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.chart-container {
+  flex: 1;
+}

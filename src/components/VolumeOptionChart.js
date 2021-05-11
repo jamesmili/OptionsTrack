@@ -29,7 +29,7 @@ function VolumeOptionChart(props){
     }
 
     return(
-        <div className="w-full px-4 py-2 lg:px-6 lg:py-4 bg-gray-800 rounded-md my-2 lg:my-0 space-y-5 overflow-scroll">
+        <div className="w-full px-4 py-2 lg:px-6 lg:py-4 bg-gray-800 rounded-md my-2 lg:my-0 space-y-5 overflow-auto">
             <div className="my-2">
                 <h1>{title}</h1>
                 <p className="text-gray-500 text-sm">Volume Chart</p>

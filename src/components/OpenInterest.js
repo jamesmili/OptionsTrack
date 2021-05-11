@@ -109,7 +109,7 @@ function OpenInterest(props){
                 <Card header={"Calls/Puts Ratio:"} data={Number(calls/puts).toFixed(2)}/>
                 <Card header={"Max Pain:"} data={maxPain}/>
             </div>
-            <div className="px-4 py-2 lg:px-6 lg:py-4 bg-gray-800 rounded-md my-2 lg:my-0 space-y-4 overflow-scroll">
+            <div className="px-4 py-2 lg:px-6 lg:py-4 bg-gray-800 rounded-md my-2 lg:my-0 space-y-4 overflow-auto">
                 <div>
                     <h1 className="text-xl">MAX PAIN</h1>
                     <p className="text-gray-500 text-sm">Total value of all put and call options when they expire at a specific strike price.</p>

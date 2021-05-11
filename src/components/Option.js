@@ -163,7 +163,7 @@ function Option(props){
         }
     }
     return(
-        <div className="text-gray-200 w-full overflow-auto mt-5 mb-5">
+        <div className="text-gray-300 w-full overflow-auto mt-5 mb-5">
         {
             loading ? 
             <div id="loadingContainer">
@@ -172,40 +172,40 @@ function Option(props){
             :
             <div className="xl:ml-20 xl:mr-20 lg:ml-10 lg:ml-10 md:ml-5 md:ml-5 ml-5 mr-5 space-y-5">
                 <div className="container mx-auto">
-                    <div className="flex flex-col lg:flex-row  justify-between items-center">
-                        <div>
-                            <p className="text-2xl">{quote.longName}</p>
-                            <p className="text-gray-600">Ticker: ${ticker.toUpperCase()}</p>
-                        </div>
-                        <SearchBar
-                            onRequestSearch={(v) => onSearch(v)}
-                            id="searchBar"
-                            placeholder="Search Ticker"
-                        />
-                        {route && <Redirect to={'/options/'+ tickerSearch} />}
+                    <div>
+                        <div className="flex flex-col lg:flex-row  justify-between items-center">
+                            <div>
+                                <p className="text-2xl">{quote.longName}</p>
+                                <p className="text-gray-600">Ticker: ${ticker.toUpperCase()}</p>
+                            </div>
+                            <SearchBar
+                                onRequestSearch={(v) => onSearch(v)}
+                                id="searchBar"
+                                placeholder="Search Ticker"
+                            />
+                            {route && <Redirect to={'/options/'+ tickerSearch} />}
 
+                        </div>
+                        <div className="my-5 flex-col flex lg:flex-row xl:space-x-5">
+                            <Card header={"Current Price:"} data={`$${Number(quote.regularMarketPrice).toFixed(2)}`}/>
+                            <Card header={"Price Change:"} data={regMarketPriceChange()}/>
+                            <Card header={"% Change:"} data={regMarketPriceChangePer()}/>
+                            <Card header={"High:"} data={Number(quote.regularMarketDayHigh).toFixed(2)}/>
+                            <Card header={"Low:"} data={Number(quote.regularMarketDayLow).toFixed(2)}/>
+                            <Card header={"Volume:"} data={quote.regularMarketVolume}/>
+                        </div>
+                    </div>
+                    <Quote className="container mx-auto" ticker={props.match.params.ticker}/>
+                    <div className="bg-gray-800 rounded-md md:my-3">
+                        <OptionTable updateData={updateData}/>
+                    </div>
+                    <div className="self-center" >
+                        <OpenInterest calls={calls} puts={puts}/>
                     </div>
                     <div className="my-5 flex-col flex lg:flex-row xl:space-x-5">
-                        <Card header={"Current Price:"} data={`$${Number(quote.regularMarketPrice).toFixed(2)}`}/>
-                        <Card header={"Price Change:"} data={regMarketPriceChange()}/>
-                        <Card header={"% Change:"} data={regMarketPriceChangePer()}/>
-                        <Card header={"High:"} data={Number(quote.regularMarketDayHigh).toFixed(2)}/>
-                        <Card header={"Low:"} data={Number(quote.regularMarketDayLow).toFixed(2)}/>
-                        <Card header={"Volume:"} data={quote.regularMarketVolume}/>
+                        <VolumeOptionChart data={callsVol} title={"CALL OPTION VOLUME"} colour={"#34D399"}/>
+                        <VolumeOptionChart data={putsVol} title={"PUT OPTION VOLUME"} colour={"#F87171"}/>
                     </div>
-                </div>
-                <div className="container mx-auto" >
-                    <Quote className="container mx-auto" ticker={props.match.params.ticker}/>
-                </div>
-                <div className="container mx-auto bg-gray-800 rounded-md md:my-3">
-                    <OptionTable updateData={updateData}/>
-                </div>
-                <div className="container mx-auto self-center" >
-                    <OpenInterest calls={calls} puts={puts}/>
-                </div>
-                <div className="container mx-auto my-5 flex-col flex lg:flex-row xl:space-x-5">
-                    <VolumeOptionChart data={callsVol} title={"CALL OPTION VOLUME"} colour={"#34D399"}/>
-                    <VolumeOptionChart data={putsVol} title={"PUT OPTION VOLUME"} colour={"#F87171"}/>
                 </div>
             </div>
         }

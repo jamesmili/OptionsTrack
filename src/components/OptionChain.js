@@ -100,20 +100,20 @@ function OptionChain(props){
                 {
                     chain.map(item => {
                         return(
-                            <tr className="border-b border-gray-900" key={item.strike}>
+                            <tr className="border-b border-gray-900 text-center font-medium" key={item.strike}>
                                 <td className="px-2">{strike(item)}</td>
-                                <td className="px-2">{item.lastPrice}</td>
-                                <td className="px-2">{item.ask}</td>
-                                <td className="px-2">{item.bid}</td>
-                                <td className="px-2">{item.delta}</td>
-                                <td className="px-2">{item.gamma}</td>
-                                <td className="px-2">{item.theta}</td>
-                                <td className="px-2">{item.rho}</td>
-                                <td className="px-2">{item.vega}</td>
+                                <td className="px-2">{Number(item.lastPrice).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.ask).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.bid).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.delta).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.gamma).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.theta).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.rho).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.vega).toFixed(2)}</td>
                                 <td className="px-2">{change(item.change)}</td>
                                 <td className="px-2">{changePercent(item.percentChange)}</td>
-                                <td className="px-2">{item.volume}</td>
-                                <td className="px-2">{item.openInterest}</td>
+                                <td className="px-2">{Number(item.volume).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.openInterest).toFixed(2)}</td>
                                 <td className="px-2">{Number(item.impliedVolatility*100).toFixed(2)}%</td>
                             </tr>
                         )

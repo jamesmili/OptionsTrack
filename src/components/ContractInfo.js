@@ -38,7 +38,7 @@ function ContractInfo(props){
             setRegularMarketDayLow(response.data.optionChain.result[0].quote.regularMarketDayLow)
             setChange(Number(response.data.optionChain.result[0].quote.regularMarketChange).toFixed(2))
             setChangePercent(Number(response.data.optionChain.result[0].quote.regularMarketChangePercent).toFixed(2))
-            setVolume(response.data.optionChain.result[0].quote.regularMarketVolume)
+            setVolume(response.data.optionChain.result[0].quote.regularMarketVolume ? response.data.optionChain.result[0].quote.regularMarketVolume : 0)
         }).catch(error =>{
             console.log(error)
         })
@@ -76,7 +76,7 @@ function ContractInfo(props){
         }
     return(
         <div>
-            <p className="text-gray-200 text-2xl">{name}</p>
+            <p className="text-gray-300 text-2xl">{name}</p>
             <p className="text-gray-600">{symbol}</p>
             <div className="my-5 flex-col flex lg:flex-row justify-between xl:space-x-5">
                 <Card header={"Current Price:"} data={`$${Number(price).toFixed(2)}`}/>

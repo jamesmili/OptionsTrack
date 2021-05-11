@@ -83,18 +83,20 @@ function Contract(props){
     }, [])
 
     return(
-        <div className="text-gray-200">
+        <div className="text-gray-300 w-full overflow-auto mt-5 mb-5">
         {
             loading ? 
             <div id="loadingContainer">
                 <CircularProgress color='inherit'/> 
             </div>
             :
-            <div className="mt-10 mb-10 xl:ml-20 xl:mr-20 lg:ml-10 lg:ml-10 md:ml-5 md:ml-5 ml-2 mr-2">
-                <ContractInfo ticker={props.match.params.ticker}
-                    contract={props.match.params.contract}
-                    history={props.history}/>                        
-                <Chart options={options} candlestickSeries={[ {data: data}]} autoWidth/>
+            <div className="xl:ml-20 xl:mr-20 lg:ml-10 lg:ml-10 md:ml-5 md:ml-5 ml-5 mr-5 space-y-5">
+                <div className="container mx-auto">
+                    <ContractInfo ticker={props.match.params.ticker}
+                        contract={props.match.params.contract}
+                        history={props.history}/>                        
+                    <Chart options={options} candlestickSeries={[ {data: data}]} autoWidth/>
+                </div>
             </div>
         }
         </div>

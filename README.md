@@ -1,3 +1,3 @@
 # OptionsTrack
 
-[Visit](https://optionstrack.herokuapp.com/options/SPY)
+[Visit](https://optionstrack.netlify.app/options/SPY)

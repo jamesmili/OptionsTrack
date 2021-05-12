@@ -203,8 +203,12 @@ function Option(props){
                         <OpenInterest calls={calls} puts={puts}/>
                     </div>
                     <div className="my-5 flex-col flex lg:flex-row xl:space-x-5">
-                        <VolumeOptionChart data={callsVol} title={"CALL OPTION VOLUME"} colour={"#34D399"}/>
-                        <VolumeOptionChart data={putsVol} title={"PUT OPTION VOLUME"} colour={"#F87171"}/>
+                        <VolumeOptionChart datakey={"strike"} xaxis={"Strike Price"} yaxis={"Volume"} 
+                                data={callsVol} title={"CALL OPTION VOLUME"} colour={"#34D399"}
+                                num={1000} symbol={"K"}/>
+                        <VolumeOptionChart datakey={"strike"} xaxis={"Strike Price"} yaxis={"Volume"} 
+                                data={putsVol} title={"PUT OPTION VOLUME"} colour={"#F87171"}
+                                num={1000} symbol={"K"}/>
                     </div>
                 </div>
             </div>

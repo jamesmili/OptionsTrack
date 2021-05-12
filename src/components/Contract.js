@@ -1,87 +1,84 @@
-import {useState, useEffect} from 'react'
+import {useEffect, useState} from 'react';
 import axios from "axios";
-import ContractInfo from './ContractInfo';
+import { proxyURL, quoteURL } from '../constants/const'
+import Card from './Card'
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { proxyURL, chartURL } from '../constants/const';
-import Chart from 'kaktana-react-lightweight-charts'
+import ContractChart from './ContractChart'
 
 function Contract(props){
+    let [name, setName] = useState("-")
+    let [symbol, setSymbol] = useState("-")
+    let [price, setPrice] = useState("-")
+    let [regularMarketDayLow, setRegularMarketDayLow] = useState("-")
+    let [regularMarketDayHigh, setRegularMarketDayHigh] = useState("-")
+    let [change, setChange] = useState("-")
+    let [changePercent, setChangePercent] = useState("-")
+    let [volume, setVolume] = useState("-")
     let [loading, setLoading] = useState(true)
-    let [data, setData] = useState([])
-    
-    const options = {
-        layout: {
-            backgroundColor: "#253248",
-            textColor: "rgba(255, 255, 255, 0.9)"
-          },
-          grid: {
-            vertLines: {
-              color: "#334158"
-            },
-            horzLines: {
-              color: "#334158"
-            }
-          },
-          priceScale: {
-            borderColor: "#485c7b"
-          },
-          timeScale: {
-            borderColor: "#485c7b",
-            rightOffset: 12,
-            barSpacing: 3,
-            fixLeftEdge: true,
-            lockVisibleTimeRangeOnResize: true,
-            rightBarStaysOnScroll: true,
-            borderVisible: false,
-            visible: true,
-            timeVisible: true,
-            secondsVisible: false
-          }
-    }
 
-    const getData = async (period, period2, interval)=>{
-        var p1
-        var p = period - 2592338
-        p1 = "?period1=" + p + "&"
-        await axios.get(proxyURL + chartURL + props.match.params.contract + p1 + "period2=" + period2 + "&interval=" + "2m", {
+    useEffect(() => {
+        getData()
+    })
+
+    const getData = () => {
+        axios.get(proxyURL + quoteURL + props.match.params.contract, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',
                 'Content-Type': 'application/json'
             }
         }).then(response => {
-            var o,h,l,c = 0.00
-            setData(response.data.chart.result[0].timestamp.map((d,index) => {
-                if (response.data.chart.result[0].indicators.quote[0].close[index]){
-                    o = Number(response.data.chart.result[0].indicators.quote[0].open[index].toFixed(2))
-                    h = Number(response.data.chart.result[0].indicators.quote[0].high[index].toFixed(2))
-                    l = Number(response.data.chart.result[0].indicators.quote[0].low[index].toFixed(2))
-                    c = Number(response.data.chart.result[0].indicators.quote[0].close[index].toFixed(2))
-                    
-                }
-                return {
-                    time: d,
-                    open: o,
-                    high: h,
-                    low: l,
-                    close: c
-
-                }
-            }))
+            var date = new Date(response.data.optionChain.result[0].quote.expireIsoDate)
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+            var p = response.data.optionChain.result[0].quote.shortName.split(' ')
+            var premium = response.data.optionChain.result[0].quote.underlyingSymbol + " " + 
+                months[date.getUTCMonth()]+' '+date.getUTCDate()+', '+date.getFullYear() +  " " + 
+                Number(p[p.length-2]).toFixed(2) + " " + p[p.length-1]
+            setName(premium.toUpperCase())
+            setSymbol(response.data.optionChain.result[0].quote.symbol)
+            setPrice(response.data.optionChain.result[0].quote.regularMarketPrice)
+            setRegularMarketDayHigh(response.data.optionChain.result[0].quote.regularMarketDayHigh)
+            setRegularMarketDayLow(response.data.optionChain.result[0].quote.regularMarketDayLow)
+            setChange(Number(response.data.optionChain.result[0].quote.regularMarketChange).toFixed(2))
+            setChangePercent(Number(response.data.optionChain.result[0].quote.regularMarketChangePercent).toFixed(2))
+            setVolume(response.data.optionChain.result[0].quote.regularMarketVolume ? response.data.optionChain.result[0].quote.regularMarketVolume : 0)
         }).then(() => {
             setLoading(false)
         }).catch(error =>{
             console.log(error)
         })
     }
+        const regMarketPriceChange = () => {
+            if (change > 0){
+                return(
+                    <p className="mr-4 text-green-400">+{Number(change).toFixed(2)}</p>
+                )
+            }else if (change < 0){
+                return(
+                    <p className="mr-4 text-red-400">{Number(change).toFixed(2)}</p>
+                )                
+            }else{
+                return(
+                    <p className="mr-4">{Number(change).toFixed(2)}</p>
+                )
+            }
+        }
 
-    useEffect(() => {
-        var period = new Date().setHours(0,0,0,0)/1000 + 60*60*9.5
-        var period2 = period + 60*60*6.5
-        var interval = "2m"
-        getData(period, period2, interval)
-    }, [])
-
+        const regMarketPriceChangePer = () => {
+            if (changePercent > 0){
+                return(
+                    <p className="mr-4 text-green-400">+{Number(changePercent).toFixed(2)}%</p>
+                )
+            }else if (changePercent < 0){
+                return(
+                    <p className="mr-4 text-red-400">{Number(changePercent).toFixed(2)}%</p>
+                )
+            }else{
+                return(
+                    <p className="mr-4">{Number(changePercent).toFixed(2)}%</p>
+                )
+            }
+        }
     return(
         <div className="text-gray-300 w-full overflow-auto mt-5 mb-5">
         {
@@ -92,10 +89,19 @@ function Contract(props){
             :
             <div className="xl:ml-20 xl:mr-20 lg:ml-10 lg:ml-10 md:ml-5 md:ml-5 ml-5 mr-5 space-y-5">
                 <div className="container mx-auto">
-                    <ContractInfo ticker={props.match.params.ticker}
-                        contract={props.match.params.contract}
-                        history={props.history}/>                        
-                    <Chart options={options} candlestickSeries={[ {data: data}]} autoWidth/>
+                    <div>
+                        <p className="text-gray-300 text-2xl">{name}</p>
+                        <p className="text-gray-600">{symbol}</p>
+                        <div className="my-5 flex-col flex lg:flex-row justify-between xl:space-x-5">
+                            <Card header={"Current Price:"} data={`$${Number(price).toFixed(2)}`}/>
+                            <Card header={"Price Change:"} data={regMarketPriceChange()}/>
+                            <Card header={"% Change:"} data={regMarketPriceChangePer()}/>
+                            <Card header={"High:"} data={Number(regularMarketDayHigh).toFixed(2)}/>
+                            <Card header={"Low:"} data={Number(regularMarketDayLow).toFixed(2)}/>
+                            <Card header={"Volume:"} data={volume}/>
+                        </div>
+                    </div>                    
+                    <ContractChart contract={props.match.params.contract}/>
                 </div>
             </div>
         }

@@ -31,9 +31,9 @@ function Option(props){
         if (props.match.params.ticker !== ticker){
             updateData(expirationDateEpoch)
         }
-        return() => {
+        return(() =>{
             setLoading(true)
-        }
+        })
     },[props.match.params.ticker, ticker])
 
     const updateData = async (epoch) => {
@@ -95,7 +95,7 @@ function Option(props){
                         })
                     }
                     var x = greeks(op, true, expirationDateEpoch, quote.regularMarketPrice)
-                    op['delta'] = x[0]
+                    op['delta'] = x[0] === 0 ? 0 : -x[0]
                     op['gamma'] = x[1]
                     op['theta'] = x[2]
                     op['rho'] = x[3]

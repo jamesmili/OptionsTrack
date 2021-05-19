@@ -1,8 +1,6 @@
 import {useState, useEffect} from "react";
-import 'react-virtualized/styles.css'
 import { Link } from "react-router-dom";
-import { connect, useSelector } from 'react-redux';
-import { order, orderBy } from '../actionReducer/actionReducer';
+import { useSelector } from 'react-redux';
 
 function OptionChain(props){
 
@@ -102,19 +100,19 @@ function OptionChain(props){
                         return(
                             <tr className="border-b border-gray-900 text-center font-medium" key={item.strike}>
                                 <td className="px-2">{strike(item)}</td>
-                                <td className="px-2">{Number(item.lastPrice).toFixed(2)}</td>
-                                <td className="px-2">{Number(item.ask).toFixed(2)}</td>
-                                <td className="px-2">{Number(item.bid).toFixed(2)}</td>
-                                <td className="px-2">{Number(item.delta).toFixed(2)}</td>
-                                <td className="px-2">{Number(item.gamma).toFixed(2)}</td>
-                                <td className="px-2">{Number(item.theta).toFixed(2)}</td>
-                                <td className="px-2">{Number(item.rho).toFixed(2)}</td>
-                                <td className="px-2">{Number(item.vega).toFixed(2)}</td>
-                                <td className="px-2">{change(item.change)}</td>
-                                <td className="px-2">{changePercent(item.percentChange)}</td>
-                                <td className="px-2">{Number(item.volume).toFixed(2)}</td>
-                                <td className="px-2">{Number(item.openInterest).toFixed(2)}</td>
-                                <td className="px-2">{Number(item.impliedVolatility*100).toFixed(2)}%</td>
+                                <td className="px-2">{Number(item.lastPrice ? item.lastPrice : 0).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.ask ? item.ask : 0).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.bid ? item.bid : 0).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.delta ? item.delta : 0).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.gamma ? item.gamma : 0).toFixed(5)}</td>
+                                <td className="px-2">{Number(item.theta ? item.theta : 0).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.rho ? item.rho : 0).toFixed(2)}</td>
+                                <td className="px-2">{Number(item.vega ? item.vega : 0).toFixed(2)}</td>
+                                <td className="px-2">{change(item.change ? item.change : 0)}</td>
+                                <td className="px-2">{changePercent(item.percentChange ? item.percentChange : 0)}</td>
+                                <td className="px-2">{Number(item.volume ? item.volume : 0)}</td>
+                                <td className="px-2">{Number(item.openInterest ? item.openInterest : 0)}</td>
+                                <td className="px-2">{Number(item.impliedVolatility ? item.impliedVolatility*100 : 0).toFixed(2)}%</td>
                             </tr>
                         )
                     })    

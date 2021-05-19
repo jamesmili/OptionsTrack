@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { ComposedChart, XAxis, YAxis, Tooltip, Bar, Legend, ResponsiveContainer} from 'recharts';
+import { BarChart, XAxis, YAxis, Tooltip, Bar, Legend, ResponsiveContainer} from 'recharts';
 import Card from './Card'
 
 function OpenInterest(props){
@@ -51,7 +51,7 @@ function OpenInterest(props){
                     "Calls": data1[k].Calls,
                     "callPrice": data1[k].callPrice,
                     "cITM": data1[k].cITM,
-                    "Puts": obj.Puts,
+                    "Puts": obj.Puts ? obj.Puts : 0,
                     "putPrice": obj.putPrice,
                     "pITM": obj.pITM
                 })
@@ -94,7 +94,7 @@ function OpenInterest(props){
                     <p>Strike: ${label}</p>
                     <p>Calls: {payload[0].payload.Calls}</p>
                     <p>Puts: {payload[0].payload.Puts}</p>
-                    <p>Value in USD: ${payload[0].payload.Value}</p>
+                    <p>Total Value (USD): ${payload[0].payload.Value}</p>
                 </div>
             )
         }
@@ -112,10 +112,10 @@ function OpenInterest(props){
             <div className="px-4 py-2 lg:px-6 lg:py-4 bg-gray-800 rounded-md my-2 lg:my-0 space-y-4 overflow-auto">
                 <div>
                     <h1 className="text-xl">MAX PAIN</h1>
-                    <p className="text-gray-500 text-sm">Total value of all put and call options when they expire at a specific strike price.</p>
+                    <p className="text-gray-500 text-sm">Total value of all call and put options when they expire at a specific strike price.</p>
                 </div>
                 <ResponsiveContainer width='100%' height={500} >
-                    <ComposedChart 
+                    <BarChart 
                         data={data}
                         barGap={0}>
                         <XAxis dataKey="strike" stroke="#9CA3AF" height={80}
@@ -128,7 +128,7 @@ function OpenInterest(props){
                         <Legend layout="horizontal" verticalAlign="top" />
                         <Bar yAxisId="left" dataKey="Call" fill="#34D399" />
                         <Bar yAxisId="left" dataKey="Put" fill="#F87171" />
-                    </ComposedChart>
+                    </BarChart>
                 </ResponsiveContainer>
             </div>
         </div>

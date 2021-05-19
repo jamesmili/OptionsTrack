@@ -10,6 +10,9 @@ function Quote(props){
 
     useEffect(()=>{
         getData(period)
+        return(()=>{
+            setData([])
+        })
     }, [props.ticker])
 
     const options = {

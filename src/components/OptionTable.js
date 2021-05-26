@@ -11,14 +11,8 @@ function OptionTable(props){
     const calls = useSelector(state => state.app.calls)
     const puts = useSelector(state => state.app.puts)
 
-    let [flag, setFlag] = useState(callsPuts)
-    let [date, setDate] = useState(epoch)
     let [callsChain, setCallsChain] = useState(calls)
     let [putsChain, setPutsChain] = useState(puts)
-
-    useEffect(() => {
-        props.updateData(date)
-    }, [flag, date])
 
     useEffect(() => {
         setCallsChain(calls)
@@ -27,11 +21,11 @@ function OptionTable(props){
 
     const handleChange = (event) => {
         const epoch = event.target.value
-        setDate(epoch)
         dispatch({
             type: "EPOCH",
             epoch: epoch
         })
+        props.updateData(epoch)
     }
 
     const convertDate = (epoch) => {
@@ -42,13 +36,11 @@ function OptionTable(props){
 
     const handleButton = (event) => {
         if (event.target.outerText === "Calls"){
-            setFlag(true)
             dispatch({
                 type: "CALLSPUTSBUTTON",
                 callsPuts: true
             })
         }else{
-            setFlag(false)
             dispatch({
                 type: "CALLSPUTSBUTTON",
                 callsPuts: false
@@ -58,31 +50,18 @@ function OptionTable(props){
     return(
         <div className="m-5">
             <div className="flex flex-wrap items-center justify-between">
-                {
-                    callsPuts ?
-                    <div className="p-5">
-                        <button className="border-2 border-gray-900 bg-gray-900 rounded-lg font-bold text-gray-200 px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-900 hover:text-white mr-6"
-                            onClick={e => handleButton(e)}>
-                            Calls
-                        </button>
-                        <button className="border-2 border-gray-900 rounded-lg font-bold text-gray-200 px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-900 hover:text-white mr-6"
-                            onClick={e => handleButton(e)}>
-                            Puts
-                        </button>
-                    </div>
-                    :
-                    <div className="p-5">
-                        <button className="border-2 border-gray-900 rounded-lg font-bold text-gray-200 px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-900 hover:text-white mr-6"
-                            onClick={e => handleButton(e)}>
-                            Calls
-                        </button>
-                        <button className="border-2 border-gray-900 bg-gray-900 rounded-lg font-bold text-gray-200 px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-900 hover:text-white mr-6"
-                            onClick={e => handleButton(e)}>
-                            Puts
-                        </button>
-                    </div>
-                }
-
+                <div className="p-5">
+                    <button className={"border-2 border-gray-900 rounded-lg font-bold text-gray-200 px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-900 hover:text-white mr-6" + 
+                            (callsPuts? " bg-gray-900" : "")}
+                        onClick={e => handleButton(e)}>
+                        Calls
+                    </button>
+                    <button className={"border-2 border-gray-900 rounded-lg font-bold text-gray-200 px-4 py-3 transition duration-300 ease-in-out hover:bg-gray-900 hover:text-white mr-6" +
+                            (callsPuts ? "" : " bg-gray-900")}
+                        onClick={e => handleButton(e)}>
+                        Puts
+                    </button>
+                </div>
                 <div className="p-5">
                     <p className="text-sm">Expiration:</p>
                     <select className="border-2 border-gray-900 rounded-lg h-10 text-black pl-2 pr-2"
@@ -101,7 +80,7 @@ function OptionTable(props){
             </div>
             <div className="overflow-x-auto w-full py-5">
             {
-                flag ?
+                callsPuts ?
                 <OptionChain chain={callsChain}/> 
                 :
                 <OptionChain chain={putsChain}/> 

@@ -49,7 +49,7 @@ function Quote(props){
         var p1
         var p = period - 15634807
         p1 = "?period1=" + p + "&"
-        axios.get(proxyURL + chartURL + props.ticker + p1 + "&period2=9999999999&interval=" + "1h", {
+        axios.get(`${proxyURL+chartURL+props.ticker+p1}&period2=9999999999&interval=1h`, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',

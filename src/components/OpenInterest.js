@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { BarChart, XAxis, YAxis, Tooltip, Bar, Legend, ResponsiveContainer} from 'recharts';
 import Card from './Card'
+import { useSelector, useDispatch } from 'react-redux';
 
 function OpenInterest(props){
 
@@ -8,6 +9,9 @@ function OpenInterest(props){
     let [calls, setCalls] = useState(0)
     let [puts, setPuts] = useState(0)
     let [maxPain, setMaxPain] = useState(0)
+    const exprDate = useSelector(state => state.app.exprDate)
+    const epoch = useSelector(state => state.app.epoch)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         var calls = props.calls
@@ -24,7 +28,7 @@ function OpenInterest(props){
             {
                 data1.push({
                     "strike": Number(calls[i].strike).toFixed(2),
-                    "Calls": calls[i].openInterest,
+                    "Calls": calls[i].openInterest ? calls[i].openInterest : 0,
                     "callPrice": calls[i].lastPrice,
                     "cITM": calls[i].inTheMoney
                 })
@@ -100,6 +104,22 @@ function OpenInterest(props){
         }
         return null;
     }
+
+    const convertDate = (epoch) => {
+        const date = new Date(epoch*1000 + 1000*60*60*10)
+        const expr = date.toLocaleDateString(undefined,  {year: 'numeric', month: 'short', day: 'numeric'})
+        return expr
+    }
+
+    const handleChange = (event) => {
+        const epoch = event.target.value
+        dispatch({
+            type: "EPOCH",
+            epoch: epoch
+        })
+        props.updateData(epoch)
+    }
+
     return(
         <div>
             <div className="my-5 flex-col flex lg:flex-row xl:space-x-5">
@@ -110,9 +130,26 @@ function OpenInterest(props){
                 <Card header={"Max Pain:"} data={maxPain}/>
             </div>
             <div className="px-4 py-2 lg:px-6 lg:py-4 bg-gray-800 rounded-md my-2 lg:my-0 space-y-4 overflow-auto">
-                <div>
-                    <h1 className="text-xl">MAX PAIN</h1>
-                    <p className="text-gray-500 text-sm">Total value of all call and put options when they expire at a specific strike price.</p>
+                <div className="flex flex-wrap items-center justify-between space-y-2">
+                    <div>
+                        <h1 className="text-xl">MAX PAIN</h1>
+                        <p className="text-gray-500 text-sm">Total value of all {convertDate(epoch) + " " + props.ticker.toUpperCase()} call and put options when they expire at a specific strike price.</p>
+                    </div>
+                    <div >
+                        <p className="text-sm">Expiration:</p>
+                        <select className="border-2 border-gray-900 rounded-lg h-10 text-black pl-2 pr-2"
+                            onChange={e => handleChange(e)} 
+                            value={epoch ? epoch : exprDate[0]}>
+                            {
+                                exprDate.map(expirationDate => {
+                                    const expr = convertDate(expirationDate)
+                                    return(
+                                        <option key={expirationDate} value={expirationDate}>{expr}</option>
+                                    )
+                                })
+                            }
+                        </select>
+                    </div>
                 </div>
                 <ResponsiveContainer width='100%' height={500} >
                     <BarChart 

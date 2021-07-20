@@ -38,11 +38,11 @@ function ContractChart(props){
           }
     }
 
-    const getData = async (period, period2)=>{
+    const getData = (period, period2)=>{
         var p1
         var p = period - 2592338
         p1 = "?period1=" + p + "&"
-        await axios.get(proxyURL + chartURL + props.contract + p1 + "period2=" + period2 + "&interval=" + "2m", {
+        axios.get(proxyURL + chartURL + props.contract + p1 + "period2=" + period2 + "&interval=" + "2m", {
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Expose-Headers' : 'access-control-allow-origin',

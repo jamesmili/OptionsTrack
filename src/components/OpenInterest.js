@@ -82,8 +82,8 @@ function OpenInterest(props){
             }
         }
         setData(data)
-        setCalls(c)
-        setPuts(p)
+        setCalls(c.toFixed(0))
+        setPuts(p.toFixed(0))
         setMaxPain(maxPainStrike)
     }, [props])
 
@@ -125,7 +125,7 @@ function OpenInterest(props){
             <div className="my-5 flex-col flex lg:flex-row xl:space-x-5">
                 <Card header={"Calls:"} data={calls}/>
                 <Card header={"Puts:"} data={puts}/>
-                <Card header={"Total:"} data={calls+puts}/>
+                <Card header={"Total:"} data={parseInt(calls)+parseInt(puts)}/>
                 <Card header={"Calls/Puts Ratio:"} data={Number(calls/puts).toFixed(2)}/>
                 <Card header={"Max Pain:"} data={maxPain}/>
             </div>
@@ -133,7 +133,7 @@ function OpenInterest(props){
                 <div className="flex flex-wrap items-center justify-between space-y-2">
                     <div>
                         <h1 className="text-xl">MAX PAIN</h1>
-                        <p className="text-gray-500 text-sm">Total value of all {convertDate(epoch) + " " + props.ticker.toUpperCase()} call and put options when they expire at a specific strike price.</p>
+                        <p className="text-gray-500 text-sm">Total intrinsic value of all {convertDate(epoch) + " " + props.ticker.toUpperCase()} call and put options when they expire at a specific strike price.</p>
                     </div>
                     <div >
                         <p className="text-sm">Expiration:</p>
@@ -160,7 +160,7 @@ function OpenInterest(props){
                             label={{ value: "STRIKE PRICE", position: "insideBottom", dy: -15, fill: "#9CA3AF", fontSize: 12}}/>
                         <YAxis yAxisId="left" stroke="#9CA3AF" orientation="left" width={90} tickFormatter={valYAxis} 
                             tick={{ fontSize: 12}}
-                            label={{ value: "TOTAL VALUE (USD)", position: "insideLeft", angle: -90, fill: "#9CA3AF", fontSize: 12}}/>
+                            label={{ value: "TOTAL INTRINSIC VALUE (USD)", position: "insideLeft", angle: -90, fill: "#9CA3AF", fontSize: 12}}/>
                         <Tooltip content={<CustomTooltip />}/>
                         <Legend layout="horizontal" verticalAlign="top" />
                         <Bar yAxisId="left" dataKey="Call" fill="#34D399" />
